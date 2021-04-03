@@ -1,87 +1,41 @@
 package com.shopping.shopping.entity;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.sql.Date;
 
+@SelectBeforeUpdate
+@DynamicInsert
+@DynamicUpdate
+@Data
 @Entity
-@NoArgsConstructor
-@Setter
-@EqualsAndHashCode
+@Table(name = "reviews", schema = "shoe_shop")
 public class Reviews {
-    private Long id;
-    private Integer reviewId;
-    private Integer customerId;
-    private Integer productId;
-    private String text;
-    private Date reviewDate;
-    private Integer rating;
-    private Customers customersByCustomerId;
-    private Product productByProductId;
 
-    @Id
-    @GeneratedValue
-    public Long getId() {
-        return id;
-    }
-
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "review_id")
-    public Integer getReviewId() {
-        return reviewId;
-    }
+    private Long reviewId;
 
+    private String text;
 
-    @Basic
-    @Column(name = "customer_id")
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-
-    @Basic
-    @Column(name = "product_id")
-    public Integer getProductId() {
-        return productId;
-    }
-
-
-    @Basic
-    @Column(name = "text")
-    public String getText() {
-        return text;
-    }
-
-
-    @Basic
     @Column(name = "review_date")
-    public Date getReviewDate() {
-        return reviewDate;
-    }
+    private Date reviewDate;
 
-
-    @Basic
-    @Column(name = "rating")
-    public Integer getRating() {
-        return rating;
-    }
-
+    private Integer rating;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-    public Customers getCustomersByCustomerId() {
-        return customersByCustomerId;
-    }
-
-
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
-    public Product getProductByProductId() {
-        return productByProductId;
-    }
+    @JoinColumn(name = "customer_id")
+    private Customers customers;
 }

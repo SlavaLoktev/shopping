@@ -1,54 +1,39 @@
 package com.shopping.shopping.entity;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
+
+@SelectBeforeUpdate
+@DynamicInsert
+@DynamicUpdate
+@Data
 @Entity
-@NoArgsConstructor
-@Setter
-@EqualsAndHashCode
+@Table(name = "department", schema = "shoe_shop")
 public class Department {
-    private Long id;
-    private Integer departmentId;
-    private String departmentName;
-    private String description;
-    private Collection<Category> categoriesByDepartmentId;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "department_id")
-    public Integer getDepartmentId() {
-        return departmentId;
-    }
+    private Long departmentId;
 
-
-    @Basic
     @Column(name = "department_name")
-    public String getDepartmentName() {
+    private String departmentName;
+
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    List<Category> categories;
+
+    @Override
+    public String toString() {
         return departmentName;
-    }
-
-
-    @Basic
-    @Column(name = "description")
-    public String getDescription() {
-        return description;
-    }
-
-
-
-    @OneToMany(mappedBy = "departmentByDepartmentId")
-    public Collection<Category> getCategoriesByDepartmentId() {
-        return categoriesByDepartmentId;
     }
 }

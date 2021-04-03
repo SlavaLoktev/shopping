@@ -1,46 +1,38 @@
 package com.shopping.shopping.entity;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
+@SelectBeforeUpdate
+@DynamicInsert
+@DynamicUpdate
+@Data
 @Entity
-@NoArgsConstructor
-@Setter
-@EqualsAndHashCode
+@Table(name = "attribute", schema = "shoe_shop")
 public class Attribute {
 
-    private Long id;
-    private Integer attributeId;
-    private String attributeName;
-    private Collection<AttrValue> attrValuesByAttributeId;
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-
-    @Basic
     @Column(name = "attribute_id")
-    public Integer getAttributeId() {
-        return attributeId;
-    }
+    private Long attributeId;
 
-
-    @Basic
     @Column(name = "attribute_name")
-    public String getAttributeName() {
+    private String attributeName;
+
+    @OneToMany(mappedBy = "attribute", fetch = FetchType.LAZY)
+    List<AttrValue> attrValues;
+
+    @Override
+    public String toString() {
         return attributeName;
-    }
-
-
-    @OneToMany(mappedBy = "attributeByAttributeId")
-    public Collection<AttrValue> getAttrValuesByAttributeId() {
-        return attrValuesByAttributeId;
     }
 }

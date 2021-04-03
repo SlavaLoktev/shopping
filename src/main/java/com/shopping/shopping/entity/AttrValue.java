@@ -1,61 +1,45 @@
 package com.shopping.shopping.entity;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
+@SelectBeforeUpdate
+@DynamicInsert
+@DynamicUpdate
+@Data
 @Entity
-@Table(name = "attr_value", schema = "shoe_shop"/*, catalog = "shoe_shop"*/)
-@NoArgsConstructor
-@Setter
-@EqualsAndHashCode
+@Table(name = "attr_value", schema = "shoe_shop")
 public class AttrValue {
-    private Long id;
-    private Integer attrValueId;
-    private Integer attributeId;
-    private String attrValue;
-    private Attribute attributeByAttributeId;
-    private Collection<ProductAndAttr> productAndAttrsByAttrValueId;
 
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-    @Basic
     @Column(name = "attr_value_id")
-    public Integer getAttrValueId() {
-        return attrValueId;
-    }
+    private Long attrValueId;
 
-
-    @Basic
-    @Column(name = "attribute_id")
-    public Integer getAttributeId() {
-        return attributeId;
-    }
-
-
-    @Basic
     @Column(name = "attr_value")
-    public String getAttrValue() {
-        return attrValue;
-    }
-
+    private String attrValue;
 
     @ManyToOne
-    @JoinColumn(name = "attribute_id", referencedColumnName = "attribute_id")
-    public Attribute getAttributeByAttributeId() {
-        return attributeByAttributeId;
-    }
+    @JoinColumn(name = "attribute_id")
+    private Attribute attribute;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "product_and_attr", schema = "shoe_shop",
+            joinColumns = @JoinColumn(name = "attr_value_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> productSetByAttrValue;
 
-    @OneToMany(mappedBy = "attrValueByAttrValueId")
-    public Collection<ProductAndAttr> getProductAndAttrsByAttrValueId() {
-        return productAndAttrsByAttrValueId;
+    @Override
+    public String toString() {
+        return attrValue;
     }
 }

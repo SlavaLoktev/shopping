@@ -1,109 +1,64 @@
 package com.shopping.shopping.entity;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
+
+@SelectBeforeUpdate
+@DynamicInsert
+@DynamicUpdate
+@Data
 @Entity
-@NoArgsConstructor
-@Setter
-@EqualsAndHashCode
+@Table(name = "product", schema = "shoe_shop")
 public class Product {
-    private Long id;
-    private Integer productId;
-    private String productName;
-    private String storageUnit;
-    private Integer price;
-    private Integer discountPrice;
-    private String description;
-    private String image;
-    private String imageSmall;
-    private Collection<ProductAndAttr> productAndAttrsByProductId;
-    private Collection<ProductAndCategory> productAndCategoriesByProductId;
-    private Collection<Reviews> reviewsByProductId;
 
-    @Id
-    @GeneratedValue
-    public Long getId() {
-        return id;
-    }
-
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "product_id")
-    public Integer getProductId() {
-        return productId;
-    }
+    private Long productId;
 
-
-    @Basic
     @Column(name = "product_name")
-    public String getProductName() {
+    private String productName;
+
+    @Column(name = "storage_unit")
+    private String storageUnit;
+
+    @Column(name = "price")
+    private Integer price;
+
+    @Column(name = "discount_price")
+    private Integer discountPrice;
+
+    @Column(name = "description")
+    private String description;
+
+    /*@Column(name = "image")
+    private String image;*/
+
+    /*@Column(name = "image_small")
+    private String imageSmall;*/
+
+    @ManyToMany(mappedBy = "productSetByCategory")
+    private List<Category> categoryList;
+
+    @ManyToMany(mappedBy = "productSetByAttrValue")
+    private List<AttrValue> attrValueList;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    List<Reviews> reviewsByProduct;
+
+    @Override
+    public String toString() {
         return productName;
     }
-
-
-    @Basic
-    @Column(name = "storage_unit")
-    public String getStorageUnit() {
-        return storageUnit;
-    }
-
-
-    @Basic
-    @Column(name = "price")
-    public Integer getPrice() {
-        return price;
-    }
-
-
-    @Basic
-    @Column(name = "discount_price")
-    public Integer getDiscountPrice() {
-        return discountPrice;
-    }
-
-
-    @Basic
-    @Column(name = "description")
-    public String getDescription() {
-        return description;
-    }
-
-
-    @Basic
-    @Column(name = "image")
-    public String getImage() {
-        return image;
-    }
-
-
-    @Basic
-    @Column(name = "image_small")
-    public String getImageSmall() {
-        return imageSmall;
-    }
-
-
-
-    @OneToMany(mappedBy = "productByProductId")
-    public Collection<ProductAndAttr> getProductAndAttrsByProductId() {
-        return productAndAttrsByProductId;
-    }
-
-
-    @OneToMany(mappedBy = "productByProductId")
-    public Collection<ProductAndCategory> getProductAndCategoriesByProductId() {
-        return productAndCategoriesByProductId;
-    }
-
-
-    @OneToMany(mappedBy = "productByProductId")
-    public Collection<Reviews> getReviewsByProductId() {
-        return reviewsByProductId;
-    }
-
 }

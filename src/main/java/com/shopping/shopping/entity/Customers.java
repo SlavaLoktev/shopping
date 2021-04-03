@@ -1,102 +1,49 @@
 package com.shopping.shopping.entity;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Collection;
+import java.util.List;
 
+@SelectBeforeUpdate
+@DynamicInsert
+@DynamicUpdate
+@Data
 @Entity
-@NoArgsConstructor
-@Setter
-@EqualsAndHashCode
+@Table(name = "customers", schema = "shoe_shop")
 public class Customers {
-    private Long id;
-    private Integer customerId;
-    private String custFirstName;
-    private String custLastName;
-    private Integer custCityId;
-    private String phoneNumber;
-    private String custEmail;
-    private Date birthday;
-    private String gender;
-    private Cities citiesByCustCityId;
-    private Collection<Reviews> reviewsByCustomerId;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "customer_id")
-    public Integer getCustomerId() {
-        return customerId;
-    }
+    private Long customerId;
 
-    @Basic
     @Column(name = "cust_first_name")
-    public String getCustFirstName() {
-        return custFirstName;
-    }
+    private String custFirstName;
 
-    @Basic
     @Column(name = "cust_last_name")
-    public String getCustLastName() {
-        return custLastName;
-    }
+    private String custLastName;
 
-
-    @Basic
-    @Column(name = "cust_city_id")
-    public Integer getCustCityId() {
-        return custCityId;
-    }
-
-
-    @Basic
     @Column(name = "phone_number")
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+    private String phoneNumber;
 
-
-    @Basic
     @Column(name = "cust_email")
-    public String getCustEmail() {
-        return custEmail;
-    }
+    private String custEmail;
 
-
-    @Basic
     @Column(name = "birthday")
-    public Date getBirthday() {
-        return birthday;
-    }
+    private Date birthday;
 
-
-    @Basic
     @Column(name = "gender")
-    public String getGender() {
-        return gender;
-    }
+    private String gender;
 
-
-
-    @ManyToOne
-    @JoinColumn(name = "cust_city_id", referencedColumnName = "cust_city_id")
-    public Cities getCitiesByCustCityId() {
-        return citiesByCustCityId;
-    }
-
-
-
-    @OneToMany(mappedBy = "customersByCustomerId")
-    public Collection<Reviews> getReviewsByCustomerId() {
-        return reviewsByCustomerId;
-    }
+    @OneToMany(mappedBy = "customers", fetch = FetchType.LAZY)
+    List<Reviews> reviewsByCustomers;
 }

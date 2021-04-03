@@ -1,68 +1,47 @@
 package com.shopping.shopping.entity;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
+
+@SelectBeforeUpdate
+@DynamicInsert
+@DynamicUpdate
+@Data
 @Entity
-@NoArgsConstructor
-@Setter
-@EqualsAndHashCode
+@Table(name = "category", schema = "shoe_shop")
 public class Category {
-    private Long id;
-    private Integer categoryId;
-    private String categoryName;
-    private String description;
-    private Integer departmentId;
-    private Department departmentByDepartmentId;
-    private Collection<ProductAndCategory> productAndCategoriesByCategoryId;
 
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-
-    @Basic
     @Column(name = "category_id")
-    public Integer getCategoryId() {
-        return categoryId;
-    }
+    private Long categoryId;
 
-    @Basic
     @Column(name = "category_name")
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-
-    @Basic
-    @Column(name = "description")
-    public String getDescription() {
-        return description;
-    }
-
-
-    @Basic
-    @Column(name = "department_id")
-    public Integer getDepartmentId() {
-        return departmentId;
-    }
-
+    private String categoryName;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", referencedColumnName = "department_id")
-    public Department getDepartmentByDepartmentId() {
-        return departmentByDepartmentId;
-    }
+    @JoinColumn(name = "department_id")
+    private Department department;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "product_and_category", schema = "shoe_shop",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> productSetByCategory;
 
-    @OneToMany(mappedBy = "categoryByCategoryId")
-    public Collection<ProductAndCategory> getProductAndCategoriesByCategoryId() {
-        return productAndCategoriesByCategoryId;
+    @Override
+    public String toString() {
+        return categoryName;
     }
 }
