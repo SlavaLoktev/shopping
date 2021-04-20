@@ -1,5 +1,7 @@
 package com.shopping.shopping.entity;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.List;
 @DynamicUpdate
 @Data
 @Entity
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Table(name = "customers", schema = "shoe_shop")
 public class Customers {
 
@@ -44,6 +47,7 @@ public class Customers {
     @Column(name = "gender")
     private String gender;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "customers", fetch = FetchType.LAZY)
     List<Reviews> reviewsByCustomers;
 }

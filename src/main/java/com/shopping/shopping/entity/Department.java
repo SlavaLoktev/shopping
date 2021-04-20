@@ -1,14 +1,15 @@
 package com.shopping.shopping.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -16,21 +17,21 @@ import java.util.List;
 @SelectBeforeUpdate
 @DynamicInsert
 @DynamicUpdate
-@Data
+@Getter
+@Setter
 @Entity
+//@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Table(name = "department", schema = "shoe_shop")
-public class Department {
+public class Department implements Serializable {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "department_id")
+    @JsonIgnore
     private Long departmentId;
 
     @Column(name = "department_name")
     private String departmentName;
-
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
-    List<Category> categories;
 
     @Override
     public String toString() {
