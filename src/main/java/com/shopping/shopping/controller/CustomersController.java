@@ -51,4 +51,30 @@ public class CustomersController {
 
         return ResponseEntity.ok(customersRepository.save(customers));
     }
+
+    @PutMapping("/update")
+    public ResponseEntity update(@RequestBody Customers customers){
+
+        if(customers.getCustomerId() == null && customers.getCustomerId() == 0){
+            return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(customers.getCustFirstName() == null || customers.getCustFirstName().trim().length() == 0){
+            return new ResponseEntity("missed param: custFirstName", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(customers.getCustLastName() == null || customers.getCustLastName().trim().length() == 0){
+            return new ResponseEntity("missed param: custLastName", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(customers.getPhoneNumber() == null || customers.getPhoneNumber().trim().length() == 0){
+            return new ResponseEntity("missed param: phoneNumber", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(customers.getCustEmail() == null || customers.getCustEmail().trim().length() == 0){
+            return new ResponseEntity("missed param: custEmail", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(customersRepository.save(customers));
+    }
 }

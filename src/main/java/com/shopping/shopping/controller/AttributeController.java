@@ -41,4 +41,20 @@ public class AttributeController {
 
         return ResponseEntity.ok(attributeRepository.save(attribute));
     }
+
+    @PutMapping("update")
+    public ResponseEntity update(@RequestBody Attribute attribute) {
+
+        //проверка на обязательные параметры
+        if (attribute.getAttributeId() == null && attribute.getAttributeId() == 0) {
+            return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        //если передали пустое значение attributeName
+        if (attribute.getAttributeName() == null || attribute.getAttributeName().trim().length() == 0) {
+            return new ResponseEntity("missed param: attributeName", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(attributeRepository.save(attribute));
+    }
 }

@@ -57,4 +57,29 @@ public class ProductController {
 
         return ResponseEntity.ok(productRepository.save(product));
     }
+
+    @PutMapping("/update")
+    public ResponseEntity update(@RequestBody Product product){
+
+        if(product.getProductId() == null && product.getProductId() == 0){
+            return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        //если передали пустое значение product_name
+        if(product.getProductName() == null || product.getProductName().trim().length() == 0){
+            return new ResponseEntity("missed param: productName", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        //если передали пустое значение price
+        if(product.getPrice() == null || product.getPrice() == 0){
+            return new ResponseEntity("missed param: price", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        //если передали пустое значение storage_unit
+        if(product.getStorageUnit() == null || product.getProductName().trim().length() == 0){
+            return new ResponseEntity("missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(productRepository.save(product));
+    }
 }

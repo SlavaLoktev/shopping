@@ -41,4 +41,20 @@ public class DepartmentController {
 
         return ResponseEntity.ok(departmentRepository.save(department));
     }
+
+    @PutMapping("update")
+    public ResponseEntity update(@RequestBody Department department) {
+
+        //проверка на обязательные параметры
+        if (department.getDepartmentId() == null && department.getDepartmentId() == 0) {
+            return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        //если передали пустое значение departmentName
+        if (department.getDepartmentName() == null || department.getDepartmentName().trim().length() == 0) {
+            return new ResponseEntity("missed param: departmentName", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(departmentRepository.save(department));
+    }
 }

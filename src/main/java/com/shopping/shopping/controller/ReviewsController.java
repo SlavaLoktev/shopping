@@ -44,4 +44,23 @@ public class ReviewsController {
 
         return ResponseEntity.ok(reviewsRepository.save(reviews));
     }
+
+    @PutMapping("/update")
+    public ResponseEntity update(@RequestBody Reviews reviews){
+
+        if(reviews.getReviewId() == null && reviews.getReviewId() == 0){
+            //id создается автоматически в БД, поэтому его не нужно передавать
+            return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(reviews.getRating() == null || reviews.getRating() == 0){
+            return new ResponseEntity("missed param: rating", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(reviews.getReviewDate() == null){
+            return new ResponseEntity("missed param: reviewDate", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(reviewsRepository.save(reviews));
+    }
 }

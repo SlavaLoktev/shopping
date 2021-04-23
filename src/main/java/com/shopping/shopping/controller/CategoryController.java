@@ -42,4 +42,20 @@ public class CategoryController {
 
         return ResponseEntity.ok(categoryRepository.save(category));
     }
+
+    @PutMapping("update")
+    public ResponseEntity update(@RequestBody Category category) {
+
+        //проверка на обязательные параметры
+        if (category.getCategoryId() == null && category.getCategoryId() == 0) {
+            return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        //если передали пустое значение categoryName
+        if (category.getCategoryName() == null || category.getCategoryName().trim().length() == 0) {
+            return new ResponseEntity("missed param: categoryName", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(categoryRepository.save(category));
+    }
 }
