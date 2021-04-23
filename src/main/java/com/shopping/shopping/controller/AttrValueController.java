@@ -2,11 +2,13 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.AttrValue;
 import com.shopping.shopping.repository.AttrValueRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/attrvalue")
@@ -56,5 +58,33 @@ public class AttrValueController {
         }
 
         return ResponseEntity.ok(attrValueRepository.save(attrValue));
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<AttrValue> findById(@PathVariable Long id){
+
+        AttrValue attrValue = null;
+
+        try {
+            attrValue = attrValueRepository.findById(id).get();
+        }catch (NoSuchElementException e){ //если объект не будет найден
+            e.printStackTrace();
+            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(attrValue);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+
+        try {
+            attrValueRepository.deleteById(id);
+        }catch (EmptyResultDataAccessException e){
+            e.printStackTrace();
+            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

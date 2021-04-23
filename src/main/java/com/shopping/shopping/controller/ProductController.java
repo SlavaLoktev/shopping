@@ -3,12 +3,14 @@ package com.shopping.shopping.controller;
 import com.shopping.shopping.entity.Product;
 import com.shopping.shopping.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 // используем @RestController, чтобы все отвыеты сразу оборачивались в JSON
 @RestController
@@ -81,5 +83,32 @@ public class ProductController {
         }
 
         return ResponseEntity.ok(productRepository.save(product));
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Product> findById(@PathVariable Long id){
+
+        Product product = null;
+
+        try {
+            product = productRepository.findById(id).get();
+        }catch (NoSuchElementException e){ //если объект не будет найден
+            e.printStackTrace();
+            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(product);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+
+        try {
+            productRepository.deleteById(id);
+        }catch (EmptyResultDataAccessException e){
+            e.printStackTrace();
+            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

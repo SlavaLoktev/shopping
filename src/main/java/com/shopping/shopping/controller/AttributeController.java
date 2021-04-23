@@ -2,11 +2,13 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Attribute;
 import com.shopping.shopping.repository.AttributeRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/attribute")
@@ -56,5 +58,33 @@ public class AttributeController {
         }
 
         return ResponseEntity.ok(attributeRepository.save(attribute));
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Attribute> findById(@PathVariable Long id){
+
+        Attribute attribute = null;
+
+        try {
+            attribute = attributeRepository.findById(id).get();
+        }catch (NoSuchElementException e){ //если объект не будет найден
+            e.printStackTrace();
+            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(attribute);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+
+        try {
+            attributeRepository.deleteById(id);
+        }catch (EmptyResultDataAccessException e){
+            e.printStackTrace();
+            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

@@ -2,11 +2,13 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Customers;
 import com.shopping.shopping.repository.CustomersRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/customers")
@@ -76,5 +78,32 @@ public class CustomersController {
         }
 
         return ResponseEntity.ok(customersRepository.save(customers));
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Customers> findById(@PathVariable Long id){
+
+        Customers customers = null;
+
+        try {
+            customers = customersRepository.findById(id).get();
+        }catch (NoSuchElementException e){
+            e.printStackTrace();
+            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(customers);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+
+        try {
+            customersRepository.deleteById(id);
+        }catch (EmptyResultDataAccessException e){
+            e.printStackTrace();
+            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
