@@ -20,12 +20,10 @@ public class ReviewsController {
         this.reviewsRepository = reviewsRepository;
     }
 
-    @GetMapping("/test")
-    public List<Reviews> test(){
+    @GetMapping("/all")
+    public List<Reviews> findAll(){
 
-        List<Reviews> list = reviewsRepository.findAll();
-
-        return list;
+        return reviewsRepository.findAll();
     }
 
     @PostMapping("/add")

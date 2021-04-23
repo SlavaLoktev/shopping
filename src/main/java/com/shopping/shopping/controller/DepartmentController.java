@@ -21,12 +21,10 @@ public class DepartmentController {
         this.departmentRepository = departmentRepository;
     }
 
-    @GetMapping("/test")
-    public List<Department> test(){
+    @GetMapping("/all")
+    public List<Department> findAll(){
 
-        List<Department> list = departmentRepository.findAll();
-
-        return list;
+        return departmentRepository.findAll();
     }
 
     @PostMapping("/add")

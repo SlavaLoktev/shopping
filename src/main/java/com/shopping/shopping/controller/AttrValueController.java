@@ -20,12 +20,10 @@ public class AttrValueController {
         this.attrValueRepository = attrValueRepository;
     }
 
-    @GetMapping("/test")
-    public List<AttrValue> test(){
+    @GetMapping("/all")
+    public List<AttrValue> findAll(){
 
-        List<AttrValue> list = attrValueRepository.findAll();
-
-        return list;
+        return attrValueRepository.findAll();
     }
 
     @PostMapping("/add")

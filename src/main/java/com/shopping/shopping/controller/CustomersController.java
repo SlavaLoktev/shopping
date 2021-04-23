@@ -20,12 +20,10 @@ public class CustomersController {
         this.customersRepository = customersRepository;
     }
 
-    @GetMapping("/test")
-    public List<Customers> test(){
+    @GetMapping("/all")
+    public List<Customers> findAll(){
 
-        List<Customers> list = customersRepository.findAll();
-
-        return list;
+        return customersRepository.findAll();
     }
 
     @PostMapping("/add")

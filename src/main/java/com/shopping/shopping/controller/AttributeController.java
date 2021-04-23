@@ -20,12 +20,10 @@ public class AttributeController {
         this.attributeRepository = attributeRepository;
     }
 
-    @GetMapping("/test")
-    public List<Attribute> test(){
+    @GetMapping("/all")
+    public List<Attribute> findAll(){
 
-        List<Attribute> list = attributeRepository.findAll();
-
-        return list;
+        return attributeRepository.findAll();
     }
 
     @PostMapping("/add")

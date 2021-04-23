@@ -24,13 +24,23 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
-    //для тестирования адрес: http://localhost:8080/product/test
-    @GetMapping("/test")
-    public List<Product> test(){
+    //для тестирования адрес: http://localhost:8080/product/all
+    @GetMapping("/all")
+    public List<Product> findAll(){
 
-        List<Product> list = productRepository.findAll();
+        return productRepository.findAll();
+    }
 
-        return list;
+    @GetMapping("/allByOrderByPriceAsc")
+    public List<Product> findAllByOrderByPriceAsc(){
+
+        return productRepository.findAllByOrderByPriceAsc();
+    }
+
+    @GetMapping("/allByOrderByPriceDesc")
+    public List<Product> findAllByOrderByPriceDesc(){
+
+        return productRepository.findAllByOrderByPriceDesc();
     }
 
     @PostMapping("/add")
