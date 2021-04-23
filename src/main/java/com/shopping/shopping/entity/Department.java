@@ -20,18 +20,26 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-//@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Table(name = "department", schema = "shoe_shop")
 public class Department implements Serializable {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "department_id")
-    @JsonIgnore
+    //@JsonIgnore
     private Long departmentId;
 
     @Column(name = "department_name")
     private String departmentName;
+
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
 
     @Override
     public String toString() {

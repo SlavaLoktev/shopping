@@ -2,10 +2,7 @@ package com.shopping.shopping.entity;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
@@ -18,13 +15,14 @@ import java.util.List;
 @SelectBeforeUpdate
 @DynamicInsert
 @DynamicUpdate
-@Data
+@Getter
+@Setter
 @Entity
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Table(name = "customers", schema = "shoe_shop")
 public class Customers {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "customer_id")
     private Long customerId;
@@ -47,7 +45,27 @@ public class Customers {
     @Column(name = "gender")
     private String gender;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "customers", fetch = FetchType.LAZY)
-    List<Reviews> reviewsByCustomers;
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public String getCustFirstName() {
+        return custFirstName;
+    }
+
+    public String getCustLastName() {
+        return custLastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getCustEmail() {
+        return custEmail;
+    }
+
+    //    @JsonBackReference
+//    @OneToMany(mappedBy = "customers", fetch = FetchType.LAZY)
+//    List<Reviews> reviewsByCustomers;
 }

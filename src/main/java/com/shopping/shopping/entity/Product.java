@@ -22,9 +22,9 @@ import java.util.Set;
 @Table(name = "product", schema = "shoe_shop")
 public class Product {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @JoinColumn(name = "product_id")
+    @Column(name = "product_id")
     private Long productId;
 
     @Column(name = "product_name")
@@ -78,6 +78,23 @@ public class Product {
 //    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
 //    //@JoinColumn(name = "product_id", referencedColumnName = "product_id")
 //    List<Reviews> reviewsByProduct;
+
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public String getStorageUnit() {
+        return storageUnit;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
 
     @Override
     public String toString() {

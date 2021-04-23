@@ -24,10 +24,10 @@ import java.util.Set;
 @Table(name = "category", schema = "shoe_shop")
 public class Category {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "category_id")
-    @JsonIgnore
+    //@JsonIgnore
     private Long categoryId;
 
     @Column(name = "category_name")
@@ -44,7 +44,13 @@ public class Category {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> productSetByCategory;*/
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
 
+    public String getCategoryName() {
+        return categoryName;
+    }
 
     @Override
     public String toString() {

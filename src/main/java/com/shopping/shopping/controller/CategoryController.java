@@ -3,10 +3,9 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Category;
 import com.shopping.shopping.repository.CategoryRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +25,21 @@ public class CategoryController {
         List<Category> list = categoryRepository.findAll();
 
         return list;
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<Category> add(@RequestBody Category category){
+
+        if(category.getCategoryId() != null && category.getCategoryId() != 0){
+            //id создается автоматически в БД, поэтому его не нужно передавать
+            return new ResponseEntity("redundant param: id must be null", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        //если передали пустое значение categoryName
+        if(category.getCategoryName() == null || category.getCategoryName().trim().length() == 0){
+            return new ResponseEntity("missed param: categoryName", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(categoryRepository.save(category));
     }
 }
