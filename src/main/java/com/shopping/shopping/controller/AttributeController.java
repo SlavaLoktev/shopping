@@ -2,6 +2,7 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Attribute;
 import com.shopping.shopping.repository.AttributeRepository;
+import com.shopping.shopping.service.AttributeService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,16 @@ import java.util.NoSuchElementException;
 @RequestMapping("/attribute")
 public class AttributeController {
 
-    private AttributeRepository attributeRepository;
+    private final AttributeService attributeService;
 
-    public AttributeController(AttributeRepository attributeRepository) {
-        this.attributeRepository = attributeRepository;
+    public AttributeController(AttributeService attributeService) {
+        this.attributeService = attributeService;
     }
 
     @GetMapping("/all")
     public List<Attribute> findAll(){
 
-        return attributeRepository.findAll();
+        return attributeService.findAll();
     }
 
     @PostMapping("/add")
@@ -39,11 +40,11 @@ public class AttributeController {
             return new ResponseEntity("missed param: attributeName", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(attributeRepository.save(attribute));
+        return ResponseEntity.ok(attributeService.add(attribute));
     }
 
     @PutMapping("update")
-    public ResponseEntity update(@RequestBody Attribute attribute) {
+    public ResponseEntity<Attribute> update(@RequestBody Attribute attribute) {
 
         //проверка на обязательные параметры
         if (attribute.getAttributeId() == null && attribute.getAttributeId() == 0) {
@@ -55,7 +56,7 @@ public class AttributeController {
             return new ResponseEntity("missed param: attributeName", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(attributeRepository.save(attribute));
+        return ResponseEntity.ok(attributeService.update(attribute));
     }
 
     @GetMapping("/id/{id}")
@@ -64,7 +65,7 @@ public class AttributeController {
         Attribute attribute = null;
 
         try {
-            attribute = attributeRepository.findById(id).get();
+            attribute = attributeService.findById(id);
         }catch (NoSuchElementException e){ //если объект не будет найден
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
@@ -77,7 +78,7 @@ public class AttributeController {
     public ResponseEntity delete(@PathVariable Long id){
 
         try {
-            attributeRepository.deleteById(id);
+            attributeService.deleteById(id);
         }catch (EmptyResultDataAccessException e){
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);

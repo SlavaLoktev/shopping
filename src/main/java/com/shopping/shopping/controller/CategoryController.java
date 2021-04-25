@@ -3,6 +3,7 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Category;
 import com.shopping.shopping.repository.CategoryRepository;
+import com.shopping.shopping.service.CategoryService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,16 @@ import java.util.NoSuchElementException;
 @RequestMapping("/category")
 public class CategoryController {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/all")
     public List<Category> findAll(){
 
-        return categoryRepository.findAll();
+        return categoryService.findAll();
     }
 
     @PostMapping("/add")
@@ -40,11 +41,11 @@ public class CategoryController {
             return new ResponseEntity("missed param: categoryName", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(categoryRepository.save(category));
+        return ResponseEntity.ok(categoryService.add(category));
     }
 
     @PutMapping("update")
-    public ResponseEntity update(@RequestBody Category category) {
+    public ResponseEntity<Category> update(@RequestBody Category category) {
 
         //проверка на обязательные параметры
         if (category.getCategoryId() == null && category.getCategoryId() == 0) {
@@ -56,7 +57,7 @@ public class CategoryController {
             return new ResponseEntity("missed param: categoryName", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(categoryRepository.save(category));
+        return ResponseEntity.ok(categoryService.update(category));
     }
 
     @GetMapping("/id/{id}")
@@ -65,7 +66,7 @@ public class CategoryController {
         Category category = null;
 
         try {
-            category = categoryRepository.findById(id).get();
+            category = categoryService.findById(id);
         }catch (NoSuchElementException e){ //если объект не будет найден
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
@@ -78,7 +79,7 @@ public class CategoryController {
     public ResponseEntity delete(@PathVariable Long id){
 
         try {
-            categoryRepository.deleteById(id);
+            categoryService.deleteById(id);
         }catch (EmptyResultDataAccessException e){
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);

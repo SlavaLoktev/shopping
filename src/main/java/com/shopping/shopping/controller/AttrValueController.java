@@ -2,6 +2,7 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.AttrValue;
 import com.shopping.shopping.repository.AttrValueRepository;
+import com.shopping.shopping.service.AttrValueService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,16 @@ import java.util.NoSuchElementException;
 @RequestMapping("/attrvalue")
 public class AttrValueController {
 
-    private AttrValueRepository attrValueRepository;
+    private final AttrValueService attrValueService;
 
-    public AttrValueController(AttrValueRepository attrValueRepository) {
-        this.attrValueRepository = attrValueRepository;
+    public AttrValueController(AttrValueService attrValueService) {
+        this.attrValueService = attrValueService;
     }
 
     @GetMapping("/all")
     public List<AttrValue> findAll(){
 
-        return attrValueRepository.findAll();
+        return attrValueService.findAll();
     }
 
     @PostMapping("/add")
@@ -39,11 +40,11 @@ public class AttrValueController {
             return new ResponseEntity("missed param: attrValue", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(attrValueRepository.save(attrValue));
+        return ResponseEntity.ok(attrValueService.add(attrValue));
     }
 
     @PutMapping("update")
-    public ResponseEntity update(@RequestBody AttrValue attrValue) {
+    public ResponseEntity<AttrValue> update(@RequestBody AttrValue attrValue) {
 
         //проверка на обязательные параметры
         if (attrValue.getAttrValueId() == null && attrValue.getAttrValueId() == 0) {
@@ -55,7 +56,7 @@ public class AttrValueController {
             return new ResponseEntity("missed param: attrValue", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(attrValueRepository.save(attrValue));
+        return ResponseEntity.ok(attrValueService.update(attrValue));
     }
 
     @GetMapping("/id/{id}")
@@ -64,7 +65,7 @@ public class AttrValueController {
         AttrValue attrValue = null;
 
         try {
-            attrValue = attrValueRepository.findById(id).get();
+            attrValue = attrValueService.findById(id);
         }catch (NoSuchElementException e){ //если объект не будет найден
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
@@ -77,7 +78,7 @@ public class AttrValueController {
     public ResponseEntity delete(@PathVariable Long id){
 
         try {
-            attrValueRepository.deleteById(id);
+            attrValueService.deleteById(id);
         }catch (EmptyResultDataAccessException e){
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);

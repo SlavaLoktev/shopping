@@ -2,6 +2,7 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Reviews;
 import com.shopping.shopping.repository.ReviewsRepository;
+import com.shopping.shopping.service.ReviewsService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,16 @@ import java.util.NoSuchElementException;
 @RequestMapping("/reviews")
 public class ReviewsController {
 
-    private ReviewsRepository reviewsRepository;
+    private final ReviewsService reviewsService;
 
-    public ReviewsController(ReviewsRepository reviewsRepository) {
-        this.reviewsRepository = reviewsRepository;
+    public ReviewsController(ReviewsService reviewsService) {
+        this.reviewsService = reviewsService;
     }
 
     @GetMapping("/all")
     public List<Reviews> findAll(){
 
-        return reviewsRepository.findAll();
+        return reviewsService.findAll();
     }
 
     @PostMapping("/add")
@@ -42,11 +43,11 @@ public class ReviewsController {
             return new ResponseEntity("missed param: reviewDate", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(reviewsRepository.save(reviews));
+        return ResponseEntity.ok(reviewsService.add(reviews));
     }
 
     @PutMapping("/update")
-    public ResponseEntity update(@RequestBody Reviews reviews){
+    public ResponseEntity<Reviews> update(@RequestBody Reviews reviews){
 
         if(reviews.getReviewId() == null && reviews.getReviewId() == 0){
             //id создается автоматически в БД, поэтому его не нужно передавать
@@ -61,7 +62,7 @@ public class ReviewsController {
             return new ResponseEntity("missed param: reviewDate", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(reviewsRepository.save(reviews));
+        return ResponseEntity.ok(reviewsService.update(reviews));
     }
 
     @GetMapping("/id/{id}")
@@ -70,7 +71,7 @@ public class ReviewsController {
         Reviews reviews = null;
 
         try {
-            reviews = reviewsRepository.findById(id).get();
+            reviews = reviewsService.findById(id);
         }catch (NoSuchElementException e){ //если объект не будет найден
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
@@ -83,7 +84,7 @@ public class ReviewsController {
     public ResponseEntity delete(@PathVariable Long id){
 
         try {
-            reviewsRepository.deleteById(id);
+            reviewsService.deleteById(id);
         }catch (EmptyResultDataAccessException e){
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);

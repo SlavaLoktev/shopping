@@ -2,6 +2,7 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Customers;
 import com.shopping.shopping.repository.CustomersRepository;
+import com.shopping.shopping.service.CustomersService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,16 @@ import java.util.NoSuchElementException;
 @RequestMapping("/customers")
 public class CustomersController {
 
-    private CustomersRepository customersRepository;
+    private final CustomersService customersService;
 
-    public CustomersController(CustomersRepository customersRepository) {
-        this.customersRepository = customersRepository;
+    public CustomersController(CustomersService customersService) {
+        this.customersService = customersService;
     }
 
     @GetMapping("/all")
     public List<Customers> findAll(){
 
-        return customersRepository.findAll();
+        return customersService.findAll();
     }
 
     @PostMapping("/add")
@@ -49,11 +50,11 @@ public class CustomersController {
             return new ResponseEntity("missed param: custEmail", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(customersRepository.save(customers));
+        return ResponseEntity.ok(customersService.add(customers));
     }
 
     @PutMapping("/update")
-    public ResponseEntity update(@RequestBody Customers customers){
+    public ResponseEntity<Customers> update(@RequestBody Customers customers){
 
         if(customers.getCustomerId() == null && customers.getCustomerId() == 0){
             return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
@@ -75,7 +76,7 @@ public class CustomersController {
             return new ResponseEntity("missed param: custEmail", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(customersRepository.save(customers));
+        return ResponseEntity.ok(customersService.update(customers));
     }
 
     @GetMapping("/id/{id}")
@@ -84,7 +85,7 @@ public class CustomersController {
         Customers customers = null;
 
         try {
-            customers = customersRepository.findById(id).get();
+            customers = customersService.findById(id);
         }catch (NoSuchElementException e){
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
@@ -97,7 +98,7 @@ public class CustomersController {
     public ResponseEntity delete(@PathVariable Long id){
 
         try {
-            customersRepository.deleteById(id);
+            customersService.deleteById(id);
         }catch (EmptyResultDataAccessException e){
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
