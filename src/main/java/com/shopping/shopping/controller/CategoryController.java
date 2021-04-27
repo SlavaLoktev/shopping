@@ -3,6 +3,7 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Category;
 import com.shopping.shopping.repository.CategoryRepository;
+import com.shopping.shopping.search.CategorySearchValues;
 import com.shopping.shopping.service.CategoryService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -86,5 +87,13 @@ public class CategoryController {
         }
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<Category>> search(@RequestBody CategorySearchValues categorySearchValues){
+
+        Long departmentId = categorySearchValues.getDepartmentId() != null ? categorySearchValues.getDepartmentId() : null;
+
+        return ResponseEntity.ok(categoryService.findByParams(departmentId));
     }
 }

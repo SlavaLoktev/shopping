@@ -2,6 +2,8 @@ package com.shopping.shopping.service;
 
 import com.shopping.shopping.entity.Category;
 import com.shopping.shopping.repository.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -35,5 +37,9 @@ public class CategoryService {
 
     public Category findById(Long id){
         return repository.findById(id).get();// т.к. возвращается optional - нужно  получить объект методом get()
+    }
+
+    public List<Category> findByParams(Long departmentId){
+        return repository.findByParams(departmentId);
     }
 }
