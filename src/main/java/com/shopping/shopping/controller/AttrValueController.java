@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/attrvalue")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AttrValueController {
 
     private final AttrValueService attrValueService;

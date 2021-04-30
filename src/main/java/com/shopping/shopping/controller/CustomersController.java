@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/customers")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CustomersController {
 
     private final CustomersService customersService;

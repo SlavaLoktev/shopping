@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
 // используем @RestController, чтобы все отвыеты сразу оборачивались в JSON
 @RestController
 @RequestMapping("/product")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProductController {
 
     private final ProductService productService;
