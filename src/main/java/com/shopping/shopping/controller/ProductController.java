@@ -103,7 +103,16 @@ public class ProductController {
             return new ResponseEntity("Missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //LOGGER.trace("addedProduct ", product.getProductName());
+        if(product.getPrice() < 0){
+            LOGGER.error("Price couldn't be < 0");
+            return new ResponseEntity("Price couldn't be < 0", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(product.getDiscountPrice() < 0){
+            LOGGER.error("Price couldn't be < 0");
+            return new ResponseEntity("Price couldn't be < 0", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         LOGGER.info("Added product: " + product);
 
         return ResponseEntity.ok(productService.add(product));
@@ -133,6 +142,16 @@ public class ProductController {
         if(product.getStorageUnit() == null || product.getProductName().trim().length() == 0){
             LOGGER.error("Missed param: storageUnit");
             return new ResponseEntity("Missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(product.getPrice() < 0){
+            LOGGER.error("Price couldn't be < 0");
+            return new ResponseEntity("Price couldn't be < 0", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(product.getDiscountPrice() < 0){
+            LOGGER.error("Price couldn't be < 0");
+            return new ResponseEntity("Price couldn't be < 0", HttpStatus.NOT_ACCEPTABLE);
         }
 
         LOGGER.info("Updated product: " + product);
@@ -223,21 +242,16 @@ public class ProductController {
 
         Integer price = productSearchValuesWithoutPaging.getPrice() != null ? productSearchValuesWithoutPaging.getPrice() : null;
 
-//        if (productService.findByParamsWithoutPaging(productName, price).size() == 1){
-//            LOGGER.info(productService.findByParamsWithoutPaging(productName, price).size() + " item found");
-//        }
-//        if (productService.findByParamsWithoutPaging(productName, price).size() > 1){
-//            LOGGER.info(productService.findByParamsWithoutPaging(productName, price).size() + " items found");
-//        }
         List<Product> result = productService.findByParamsWithoutPaging(productName, price);
+
         if (result.size() == 1){
             LOGGER.info(result.size() + " item found");
         }
+
         if (result.size() > 1){
             LOGGER.info(result.size() + " items found");
         }
 
         return ResponseEntity.ok(result);
-        //return ResponseEntity.ok(productService.findByParamsWithoutPaging(productName, price));
     }
 }
