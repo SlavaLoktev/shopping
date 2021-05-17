@@ -2,6 +2,7 @@ package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Reviews;
 import com.shopping.shopping.repository.ReviewsRepository;
+import com.shopping.shopping.search.ReviewsSearchValues;
 import com.shopping.shopping.service.ReviewsService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -91,5 +92,12 @@ public class ReviewsController {
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
         }
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<Reviews>> search(@RequestBody ReviewsSearchValues reviewsSearchValues){
+
+        Long product = reviewsSearchValues.getProduct() != null ? reviewsSearchValues.getProduct() : null;
+        return ResponseEntity.ok(reviewsService.findByParams(product));
     }
 }

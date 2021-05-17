@@ -3,7 +3,10 @@ package com.shopping.shopping.controller;
 import com.shopping.shopping.entity.Product;
 import com.shopping.shopping.repository.ProductRepository;
 import com.shopping.shopping.search.ProductSearchValues;
+import com.shopping.shopping.search.ProductSearchValuesWithoutPaging;
 import com.shopping.shopping.service.ProductService;
+import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -25,6 +28,9 @@ public class ProductController {
 
     private final ProductService productService;
 
+    //private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
+    private static Logger LOGGER = Logger.getLogger(ProductController.class);
+
     //автоматическое внедрение экземпляра класса через конструктор
     public ProductController(ProductService productService) {
         this.productService = productService;
@@ -34,17 +40,38 @@ public class ProductController {
     @GetMapping("/all")
     public List<Product> findAll(){
 
+        if (productService.findAll().size() == 1){
+            LOGGER.info(productService.findAll().size() + " item found");
+        }
+        if (productService.findAll().size() > 1){
+            LOGGER.info(productService.findAll().size() + " items found");
+        }
+
         return productService.findAll();
     }
 
     @GetMapping("/allByOrderByPriceAsc")
     public List<Product> findAllByOrderByPriceAsc(){
 
+        if (productService.findAllByOrderByPriceAsc().size() == 1){
+            LOGGER.info(productService.findAll().size() + " item found");
+        }
+        if (productService.findAllByOrderByPriceAsc().size() > 1){
+            LOGGER.info(productService.findAll().size() + " items found");
+        }
+
         return productService.findAllByOrderByPriceAsc();
     }
 
     @GetMapping("/allByOrderByPriceDesc")
     public List<Product> findAllByOrderByPriceDesc(){
+
+        if (productService.findAllByOrderByPriceDesc().size() == 1){
+            LOGGER.info(productService.findAll().size() + " item found");
+        }
+        if (productService.findAllByOrderByPriceDesc().size() > 1){
+            LOGGER.info(productService.findAll().size() + " items found");
+        }
 
         return productService.findAllByOrderByPriceDesc();
     }
@@ -55,23 +82,29 @@ public class ProductController {
         //проверка на обязательные параметры
         if(product.getProductId() != null && product.getProductId() != 0){
             //id создается автоматически в БД, поэтому его не нужно передавать
-            return new ResponseEntity("redundand param: id must be null", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity("Redundand param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
         //если передали пустое значение product_name
         if(product.getProductName() == null || product.getProductName().trim().length() == 0){
-            return new ResponseEntity("missed param: productName", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: productName");
+            return new ResponseEntity("Missed param: productName", HttpStatus.NOT_ACCEPTABLE);
         }
 
         //если передали пустое значение price
         if(product.getPrice() == null || product.getPrice() == 0){
-            return new ResponseEntity("missed param: price", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: price");
+            return new ResponseEntity("Missed param: price", HttpStatus.NOT_ACCEPTABLE);
         }
 
         //если передали пустое значение storage_unit
         if(product.getStorageUnit() == null || product.getProductName().trim().length() == 0){
-            return new ResponseEntity("missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: storageUnit");
+            return new ResponseEntity("Missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        //LOGGER.trace("addedProduct ", product.getProductName());
+        LOGGER.info("Added product: " + product);
 
         return ResponseEntity.ok(productService.add(product));
     }
@@ -80,23 +113,29 @@ public class ProductController {
     public ResponseEntity<Product> update(@RequestBody Product product){
 
         if(product.getProductId() == null && product.getProductId() == 0){
-            return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: id");
+            return new ResponseEntity("Missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }
 
         //если передали пустое значение product_name
         if(product.getProductName() == null || product.getProductName().trim().length() == 0){
-            return new ResponseEntity("missed param: productName", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: productName");
+            return new ResponseEntity("Missed param: productName", HttpStatus.NOT_ACCEPTABLE);
         }
 
         //если передали пустое значение price
         if(product.getPrice() == null || product.getPrice() == 0){
-            return new ResponseEntity("missed param: price", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: price");
+            return new ResponseEntity("Missed param: price", HttpStatus.NOT_ACCEPTABLE);
         }
 
         //если передали пустое значение storage_unit
         if(product.getStorageUnit() == null || product.getProductName().trim().length() == 0){
-            return new ResponseEntity("missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: storageUnit");
+            return new ResponseEntity("Missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        LOGGER.info("Updated product: " + product);
 
         return ResponseEntity.ok(productService.update(product));
     }
@@ -110,8 +149,11 @@ public class ProductController {
             product = productService.findById(id);
         }catch (NoSuchElementException e){ //если объект не будет найден
             e.printStackTrace();
-            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Id = " + id + " not found");
+            return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        LOGGER.info("Product " + product + " found");
 
         return ResponseEntity.ok(product);
     }
@@ -123,8 +165,12 @@ public class ProductController {
             productService.deleteById(id);
         }catch (EmptyResultDataAccessException e){
             e.printStackTrace();
+            LOGGER.error("Id = " + id + " not found");
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        LOGGER.info("Deleted product with id: " + id);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -159,7 +205,39 @@ public class ProductController {
         //результат запроса с постраничным выводом
         Page result = productService.findByParams(productName, price, pageRequest);
 
+        if (result.getSize() == 1){
+            LOGGER.info(result.getSize() + " item found");
+        }
+        if (result.getSize() > 1){
+            LOGGER.info(result.getSize() + " items found");
+        }
+
         //результат запроса
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/searchWithoutPaging")
+    public ResponseEntity<List<Product>> searchWithoutPaging(@RequestBody ProductSearchValuesWithoutPaging productSearchValuesWithoutPaging){
+
+        String productName = productSearchValuesWithoutPaging.getProductName() != null ? productSearchValuesWithoutPaging.getProductName() : null;
+
+        Integer price = productSearchValuesWithoutPaging.getPrice() != null ? productSearchValuesWithoutPaging.getPrice() : null;
+
+//        if (productService.findByParamsWithoutPaging(productName, price).size() == 1){
+//            LOGGER.info(productService.findByParamsWithoutPaging(productName, price).size() + " item found");
+//        }
+//        if (productService.findByParamsWithoutPaging(productName, price).size() > 1){
+//            LOGGER.info(productService.findByParamsWithoutPaging(productName, price).size() + " items found");
+//        }
+        List<Product> result = productService.findByParamsWithoutPaging(productName, price);
+        if (result.size() == 1){
+            LOGGER.info(result.size() + " item found");
+        }
+        if (result.size() > 1){
+            LOGGER.info(result.size() + " items found");
+        }
+
+        return ResponseEntity.ok(result);
+        //return ResponseEntity.ok(productService.findByParamsWithoutPaging(productName, price));
     }
 }

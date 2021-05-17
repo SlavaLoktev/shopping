@@ -1,6 +1,8 @@
 package com.shopping.shopping.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.shopping.shopping.ItemsJsonDeserializer;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
@@ -8,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +23,7 @@ import java.util.Set;
 @Entity
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Table(name = "product", schema = "shoe_shop")
-public class Product {
+public class Product implements Serializable {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -42,18 +45,21 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    /*@Column(name = "image")
-    private String image;*/
+    @Column(name = "image")
+    private String image;
 
-    /*@Column(name = "image_small")
-    private String imageSmall;*/
+    @Column(name = "image_small")
+    private String imageSmall;
 
-
+    @Column(name = "new_label")
+    private Boolean newLabel;
 
     /*@ManyToMany(mappedBy = "productSetByCategory")
     private List<Category> categoryList;*/
 
     //@JsonIgnore
+    //@JsonDeserialize(using = ItemsJsonDeserializer.class)
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     @ManyToMany
     @JoinTable(name = "product_and_category", schema = "shoe_shop",
             joinColumns = @JoinColumn(name = "product_id"),

@@ -36,4 +36,8 @@ public class ReviewsService {
     public Reviews findById(Long id){
         return repository.findById(id).get();// т.к. возвращается optional - нужно  получить объект методом get()
     }
+
+    public List<Reviews> findByParams(Long product){
+        return repository.findByParams(product);
+    }
 }

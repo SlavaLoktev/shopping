@@ -1,7 +1,9 @@
 package com.shopping.shopping.service;
 
+import com.shopping.shopping.controller.ProductController;
 import com.shopping.shopping.entity.Product;
 import com.shopping.shopping.repository.ProductRepository;
+import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -51,5 +53,9 @@ public class ProductService {
 
     public List<Product> findAllByOrderByPriceDesc(){
         return repository.findAllByOrderByPriceDesc();
+    }
+
+    public List<Product> findByParamsWithoutPaging(String productName, Integer price){
+        return repository.findByParamsWithoutPaging(productName, price);
     }
 }

@@ -33,4 +33,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                @Param("price") Integer price,
                                Pageable pageable);
 
+    @Query("select p from Product p where " +
+            "(:productName is null or :productName='' or lower(p.productName) like lower(concat('%', :productName, '%') ) ) and" +
+            "(:price is null or p.price=:price)")
+    List<Product> findByParamsWithoutPaging(@Param("productName") String productName,
+                                            @Param("price") Integer price);
+
 }

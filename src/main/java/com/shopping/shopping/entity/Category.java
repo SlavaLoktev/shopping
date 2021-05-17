@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +23,7 @@ import java.util.Set;
 @Entity
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Table(name = "category", schema = "shoe_shop")
-public class Category {
+public class Category implements Serializable {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
