@@ -1,8 +1,6 @@
 package com.shopping.shopping.entity;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.shopping.shopping.ItemsJsonDeserializer;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
@@ -11,7 +9,6 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 
@@ -100,6 +97,10 @@ public class Product implements Serializable {
 
     public Integer getPrice() {
         return price;
+    }
+
+    public Integer getDiscountPrice() {
+        return discountPrice;
     }
 
     @Override
