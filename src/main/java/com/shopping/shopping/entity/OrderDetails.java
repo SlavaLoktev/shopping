@@ -1,7 +1,6 @@
 package com.shopping.shopping.entity;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
@@ -9,7 +8,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @SelectBeforeUpdate
 @DynamicInsert
@@ -29,9 +27,6 @@ public class OrderDetails {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "unit_price")
-    private Integer unitPrice;
-
     @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "order_id", foreignKey = @ForeignKey(name = "FK_order_to_order_details"), referencedColumnName = "order_id")
     private Orders order;
@@ -46,10 +41,6 @@ public class OrderDetails {
 
     public Integer getQuantity() {
         return quantity;
-    }
-
-    public Integer getUnitPrice() {
-        return unitPrice;
     }
 
     public Orders getOrder() {

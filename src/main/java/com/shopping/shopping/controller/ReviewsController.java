@@ -1,7 +1,6 @@
 package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Reviews;
-import com.shopping.shopping.repository.ReviewsRepository;
 import com.shopping.shopping.search.ReviewsSearchValues;
 import com.shopping.shopping.service.ReviewsService;
 import org.apache.log4j.Logger;

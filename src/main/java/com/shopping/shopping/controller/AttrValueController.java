@@ -1,7 +1,6 @@
 package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.AttrValue;
-import com.shopping.shopping.repository.AttrValueRepository;
 import com.shopping.shopping.service.AttrValueService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;

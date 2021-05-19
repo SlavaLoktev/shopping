@@ -1,7 +1,6 @@
 package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Customers;
-import com.shopping.shopping.repository.CustomersRepository;
 import com.shopping.shopping.service.CustomersService;
 import org.apache.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -61,6 +60,11 @@ public class CustomersController {
             return new ResponseEntity("Missed param: phoneNumber", HttpStatus.NOT_ACCEPTABLE);
         }
 
+        if(!customers.getPhoneNumber().matches("-?[\\d]+")){
+            LOGGER.error("CustomerPhone can contain only numbers");
+            return new ResponseEntity("CustomerPhone can contain only numbers", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         if(customers.getCustEmail() == null || customers.getCustEmail().trim().length() == 0){
             LOGGER.error("Missed param: custEmail");
             return new ResponseEntity("Missed param: custEmail", HttpStatus.NOT_ACCEPTABLE);
@@ -92,6 +96,11 @@ public class CustomersController {
         if(customers.getPhoneNumber() == null || customers.getPhoneNumber().trim().length() == 0){
             LOGGER.error("Missed param: phoneNumber");
             return new ResponseEntity("Missed param: phoneNumber", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(!customers.getPhoneNumber().matches("-?[\\d]+")){
+            LOGGER.error("CustomerPhone can contain only numbers");
+            return new ResponseEntity("CustomerPhone can contain only numbers", HttpStatus.NOT_ACCEPTABLE);
         }
 
         if(customers.getCustEmail() == null || customers.getCustEmail().trim().length() == 0){

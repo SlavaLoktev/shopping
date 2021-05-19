@@ -2,7 +2,6 @@ package com.shopping.shopping.controller;
 
 
 import com.shopping.shopping.entity.Category;
-import com.shopping.shopping.repository.CategoryRepository;
 import com.shopping.shopping.search.CategorySearchValues;
 import com.shopping.shopping.service.CategoryService;
 import org.apache.log4j.Logger;

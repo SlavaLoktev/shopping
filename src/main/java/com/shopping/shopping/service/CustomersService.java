@@ -1,7 +1,6 @@
 package com.shopping.shopping.service;
 
 import com.shopping.shopping.entity.Customers;
-import com.shopping.shopping.entity.Product;
 import com.shopping.shopping.repository.CustomersRepository;
 import org.springframework.stereotype.Service;
 

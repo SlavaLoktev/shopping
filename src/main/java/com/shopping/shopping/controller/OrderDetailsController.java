@@ -1,7 +1,6 @@
 package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.OrderDetails;
-import com.shopping.shopping.entity.Orders;
 import com.shopping.shopping.service.OrderDetailsService;
 import org.apache.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -57,6 +56,8 @@ public class OrderDetailsController {
             return new ResponseEntity("Product doesn't exist", HttpStatus.NOT_ACCEPTABLE);
         }
 
+        orderDetails.getQuantity().intValue();
+
         LOGGER.info("Added orderDetails: " + orderDetails);
 
         return ResponseEntity.ok(orderDetailsService.add(orderDetails));
@@ -85,6 +86,8 @@ public class OrderDetailsController {
             LOGGER.error("Order doesn't exist");
             return new ResponseEntity("Order doesn't exist", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        orderDetails.getQuantity().intValue();
 
         LOGGER.info("Updated orderDetails: " + orderDetails);
 

@@ -1,6 +1,5 @@
 package com.shopping.shopping.search;
 
-import com.shopping.shopping.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

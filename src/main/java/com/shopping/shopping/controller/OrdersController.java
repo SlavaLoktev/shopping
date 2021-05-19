@@ -71,6 +71,11 @@ public class OrdersController {
             return new ResponseEntity("Missed param: customerPhone", HttpStatus.NOT_ACCEPTABLE);
         }
 
+        if(!orders.getCustomerPhone().matches("-?[\\d]+")){
+            LOGGER.error("CustomerPhone can contain only numbers");
+            return new ResponseEntity("CustomerPhone can contain only numbers", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         if(orders.getQuantity() < 0 || orders.getQuantity() == 0 || orders.getQuantity() == null){
             LOGGER.error("Quantity couldn't be <= 0");
             return new ResponseEntity("Quantity can not be <= 0", HttpStatus.NOT_ACCEPTABLE);
@@ -80,6 +85,8 @@ public class OrdersController {
             LOGGER.error("Date can not be null");
             return new ResponseEntity("Date can not be null", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        orders.getQuantity().intValue();
 
         LOGGER.info("Added order: " + orders);
 
@@ -120,6 +127,11 @@ public class OrdersController {
             return new ResponseEntity("Missed param: customerPhone", HttpStatus.NOT_ACCEPTABLE);
         }
 
+        if(!orders.getCustomerPhone().matches("-?[\\d]+")){
+            LOGGER.error("CustomerPhone can contain only numbers");
+            return new ResponseEntity("CustomerPhone can contain only numbers", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         if(orders.getQuantity() < 0 || orders.getQuantity() == 0 || orders.getQuantity() == null){
             LOGGER.error("Quantity couldn't be <= 0");
             return new ResponseEntity("Quantity can not be <= 0", HttpStatus.NOT_ACCEPTABLE);
@@ -129,6 +141,8 @@ public class OrdersController {
             LOGGER.error("Date can not be null");
             return new ResponseEntity("Date can not be null", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        orders.getQuantity().intValue();
 
         LOGGER.info("Updated order: " + orders);
 

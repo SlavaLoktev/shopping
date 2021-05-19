@@ -2,8 +2,6 @@ package com.shopping.shopping.service;
 
 import com.shopping.shopping.entity.Category;
 import com.shopping.shopping.repository.CategoryRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

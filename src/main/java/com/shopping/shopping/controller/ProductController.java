@@ -1,13 +1,10 @@
 package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Product;
-import com.shopping.shopping.repository.ProductRepository;
 import com.shopping.shopping.search.ProductSearchValues;
 import com.shopping.shopping.search.ProductSearchValuesWithoutPaging;
 import com.shopping.shopping.service.ProductService;
 import org.apache.log4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -41,10 +37,10 @@ public class ProductController {
     public List<Product> findAll(){
 
         if (productService.findAll().size() == 1){
-            LOGGER.info(productService.findAll().size() + " item found");
+            LOGGER.info(productService.findAll().size() + " product found");
         }
         if (productService.findAll().size() > 1){
-            LOGGER.info(productService.findAll().size() + " items found");
+            LOGGER.info(productService.findAll().size() + " products found");
         }
 
         return productService.findAll();
@@ -54,10 +50,10 @@ public class ProductController {
     public List<Product> findAllByOrderByPriceAsc(){
 
         if (productService.findAllByOrderByPriceAsc().size() == 1){
-            LOGGER.info(productService.findAll().size() + " item found");
+            LOGGER.info(productService.findAll().size() + " product found");
         }
         if (productService.findAllByOrderByPriceAsc().size() > 1){
-            LOGGER.info(productService.findAll().size() + " items found");
+            LOGGER.info(productService.findAll().size() + " products found");
         }
 
         return productService.findAllByOrderByPriceAsc();
@@ -67,10 +63,10 @@ public class ProductController {
     public List<Product> findAllByOrderByPriceDesc(){
 
         if (productService.findAllByOrderByPriceDesc().size() == 1){
-            LOGGER.info(productService.findAll().size() + " item found");
+            LOGGER.info(productService.findAll().size() + " product found");
         }
         if (productService.findAllByOrderByPriceDesc().size() > 1){
-            LOGGER.info(productService.findAll().size() + " items found");
+            LOGGER.info(productService.findAll().size() + " products found");
         }
 
         return productService.findAllByOrderByPriceDesc();

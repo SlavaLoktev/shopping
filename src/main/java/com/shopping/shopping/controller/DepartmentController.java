@@ -1,8 +1,6 @@
 package com.shopping.shopping.controller;
 
 import com.shopping.shopping.entity.Department;
-import com.shopping.shopping.repository.CategoryRepository;
-import com.shopping.shopping.repository.DepartmentRepository;
 import com.shopping.shopping.service.DepartmentService;
 import org.apache.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
