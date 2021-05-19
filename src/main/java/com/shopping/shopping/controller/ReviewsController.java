@@ -4,6 +4,7 @@ import com.shopping.shopping.entity.Reviews;
 import com.shopping.shopping.repository.ReviewsRepository;
 import com.shopping.shopping.search.ReviewsSearchValues;
 import com.shopping.shopping.service.ReviewsService;
+import org.apache.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,21 @@ public class ReviewsController {
 
     private final ReviewsService reviewsService;
 
+    private static Logger LOGGER = Logger.getLogger(ProductController.class);
+
     public ReviewsController(ReviewsService reviewsService) {
         this.reviewsService = reviewsService;
     }
 
     @GetMapping("/all")
     public List<Reviews> findAll(){
+
+        if (reviewsService.findAll().size() == 1){
+            LOGGER.info(reviewsService.findAll().size() + " review found");
+        }
+        if (reviewsService.findAll().size() > 1){
+            LOGGER.info(reviewsService.findAll().size() + " reviews found");
+        }
 
         return reviewsService.findAll();
     }
@@ -34,16 +44,21 @@ public class ReviewsController {
 
         if(reviews.getReviewId() != null && reviews.getReviewId() != 0){
             //id создается автоматически в БД, поэтому его не нужно передавать
-            return new ResponseEntity("redundant param: id must be null", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Redundand param: id must be null");
+            return new ResponseEntity("Redundant param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
         if(reviews.getRating() == null || reviews.getRating() == 0){
-            return new ResponseEntity("missed param: rating", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: rating");
+            return new ResponseEntity("Missed param: rating", HttpStatus.NOT_ACCEPTABLE);
         }
 
         if(reviews.getReviewDate() == null){
-            return new ResponseEntity("missed param: reviewDate", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: reviewDate");
+            return new ResponseEntity("Missed param: reviewDate", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        LOGGER.info("Added review: " + reviews);
 
         return ResponseEntity.ok(reviewsService.add(reviews));
     }
@@ -53,16 +68,21 @@ public class ReviewsController {
 
         if(reviews.getReviewId() == null && reviews.getReviewId() == 0){
             //id создается автоматически в БД, поэтому его не нужно передавать
-            return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: id");
+            return new ResponseEntity("Missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }
 
         if(reviews.getRating() == null || reviews.getRating() == 0){
-            return new ResponseEntity("missed param: rating", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: rating");
+            return new ResponseEntity("Missed param: rating", HttpStatus.NOT_ACCEPTABLE);
         }
 
         if(reviews.getReviewDate() == null){
-            return new ResponseEntity("missed param: reviewDate", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Missed param: reviewDate");
+            return new ResponseEntity("Missed param: reviewDate", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        LOGGER.info("Updated review: " + reviews);
 
         return ResponseEntity.ok(reviewsService.update(reviews));
     }
@@ -76,8 +96,11 @@ public class ReviewsController {
             reviews = reviewsService.findById(id);
         }catch (NoSuchElementException e){ //если объект не будет найден
             e.printStackTrace();
-            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Id = " + id + " not found");
+            return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        LOGGER.info("Review " + reviews + " found");
 
         return ResponseEntity.ok(reviews);
     }
@@ -89,8 +112,12 @@ public class ReviewsController {
             reviewsService.deleteById(id);
         }catch (EmptyResultDataAccessException e){
             e.printStackTrace();
-            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error("Id = " + id + " not found");
+            return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        LOGGER.info("Deleted review with id: " + id);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -98,6 +125,17 @@ public class ReviewsController {
     public ResponseEntity<List<Reviews>> search(@RequestBody ReviewsSearchValues reviewsSearchValues){
 
         Long product = reviewsSearchValues.getProduct() != null ? reviewsSearchValues.getProduct() : null;
-        return ResponseEntity.ok(reviewsService.findByParams(product));
+
+        List<Reviews> result = reviewsService.findByParams(product);
+
+        if (result.size() == 1){
+            LOGGER.info(result.size() + " review found");
+        }
+
+        if (result.size() > 1){
+            LOGGER.info(result.size() + " reviews found");
+        }
+
+        return ResponseEntity.ok(result);
     }
 }

@@ -82,6 +82,7 @@ public class ProductController {
         //проверка на обязательные параметры
         if(product.getProductId() != null && product.getProductId() != 0){
             //id создается автоматически в БД, поэтому его не нужно передавать
+            LOGGER.error("Redundand param: id must be null");
             return new ResponseEntity("Redundand param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
@@ -105,12 +106,12 @@ public class ProductController {
 
         if(product.getPrice() < 0){
             LOGGER.error("Price couldn't be < 0");
-            return new ResponseEntity("Price couldn't be < 0", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity("Price can not be < 0", HttpStatus.NOT_ACCEPTABLE);
         }
 
         if(product.getDiscountPrice() < 0){
             LOGGER.error("Price couldn't be < 0");
-            return new ResponseEntity("Price couldn't be < 0", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity("Price can not be < 0", HttpStatus.NOT_ACCEPTABLE);
         }
 
         LOGGER.info("Added product: " + product);
@@ -146,12 +147,12 @@ public class ProductController {
 
         if(product.getPrice() < 0){
             LOGGER.error("Price couldn't be < 0");
-            return new ResponseEntity("Price couldn't be < 0", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity("Price can not < 0", HttpStatus.NOT_ACCEPTABLE);
         }
 
         if(product.getDiscountPrice() < 0){
             LOGGER.error("Price couldn't be < 0");
-            return new ResponseEntity("Price couldn't be < 0", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity("Price can not be < 0", HttpStatus.NOT_ACCEPTABLE);
         }
 
         LOGGER.info("Updated product: " + product);
@@ -185,7 +186,7 @@ public class ProductController {
         }catch (EmptyResultDataAccessException e){
             e.printStackTrace();
             LOGGER.error("Id = " + id + " not found");
-            return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
         }
 
         LOGGER.info("Deleted product with id: " + id);
@@ -245,11 +246,11 @@ public class ProductController {
         List<Product> result = productService.findByParamsWithoutPaging(productName, price);
 
         if (result.size() == 1){
-            LOGGER.info(result.size() + " item found");
+            LOGGER.info(result.size() + " product found");
         }
 
         if (result.size() > 1){
-            LOGGER.info(result.size() + " items found");
+            LOGGER.info(result.size() + " products found");
         }
 
         return ResponseEntity.ok(result);

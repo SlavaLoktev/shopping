@@ -65,6 +65,15 @@ public class Customers {
         return custEmail;
     }
 
+    @Override
+    public String toString() {
+        return "Customers{" +
+                "customerId=" + customerId +
+                ", custFirstName='" + custFirstName + '\'' +
+                ", custLastName='" + custLastName + '\'' +
+                '}';
+    }
+
     //    @JsonBackReference
 //    @OneToMany(mappedBy = "customers", fetch = FetchType.LAZY)
 //    List<Reviews> reviewsByCustomers;

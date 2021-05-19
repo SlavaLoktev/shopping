@@ -55,4 +55,12 @@ public class Reviews {
     public Integer getRating() {
         return rating;
     }
+
+    @Override
+    public String toString() {
+        return "Reviews{" +
+                "reviewId=" + reviewId +
+                ", text='" + text + '\'' +
+                '}';
+    }
 }
