@@ -43,12 +43,10 @@ public class CategoryController {
     public ResponseEntity<Category> add(@RequestBody Category category){
 
         if(category.getCategoryId() != null && category.getCategoryId() != 0){
-            //id создается автоматически в БД, поэтому его не нужно передавать
             LOGGER.error("Redundand param: id must be null");
             return new ResponseEntity("Redundant param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение categoryName
         if(category.getCategoryName() == null || category.getCategoryName().trim().length() == 0){
             LOGGER.error("Missed param: categoryName");
             return new ResponseEntity("Missed param: categoryName", HttpStatus.NOT_ACCEPTABLE);
@@ -62,13 +60,11 @@ public class CategoryController {
     @PutMapping("update")
     public ResponseEntity<Category> update(@RequestBody Category category) {
 
-        //проверка на обязательные параметры
         if (category.getCategoryId() == null && category.getCategoryId() == 0) {
             LOGGER.error("Missed param: id");
             return new ResponseEntity("Missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение categoryName
         if (category.getCategoryName() == null || category.getCategoryName().trim().length() == 0) {
             LOGGER.error("Missed param: categoryName");
             return new ResponseEntity("Missed param: categoryName", HttpStatus.NOT_ACCEPTABLE);
@@ -86,7 +82,7 @@ public class CategoryController {
 
         try {
             category = categoryService.findById(id);
-        }catch (NoSuchElementException e){ //если объект не будет найден
+        }catch (NoSuchElementException e){
             e.printStackTrace();
             LOGGER.error("Id = " + id + " not found");
             return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);

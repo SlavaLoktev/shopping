@@ -52,11 +52,7 @@ public class Product implements Serializable {
     @Column(name = "new_label")
     private Boolean newLabel;
 
-    /*@ManyToMany(mappedBy = "productSetByCategory")
-    private List<Category> categoryList;*/
 
-    //@JsonIgnore
-    //@JsonDeserialize(using = ItemsJsonDeserializer.class)
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     @ManyToMany
     @JoinTable(name = "product_and_category", schema = "shoe_shop",
@@ -64,25 +60,11 @@ public class Product implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories;
 
-
-
-    /*@ManyToMany(mappedBy = "productSetByAttrValue")
-    private List<AttrValue> attrValueList;*/
-
-    //@JsonIgnore
     @ManyToMany
     @JoinTable(name = "product_and_attr", schema = "shoe_shop",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "attr_value_id"))
     private Set<AttrValue> attrValues;
-
-
-
-    //@JsonBackReference
-//    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-//    //@JoinColumn(name = "product_id", referencedColumnName = "product_id")
-//    List<Reviews> reviewsByProduct;
-
 
     public Long getProductId() {
         return productId;

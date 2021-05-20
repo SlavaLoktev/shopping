@@ -45,7 +45,6 @@ public class DepartmentController {
             return new ResponseEntity("Redundant param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение departmentName
         if(department.getDepartmentName() == null || department.getDepartmentName().trim().length() == 0){
             LOGGER.error("Missed param: departmentName");
             return new ResponseEntity("Missed param: departmentName", HttpStatus.NOT_ACCEPTABLE);
@@ -59,13 +58,11 @@ public class DepartmentController {
     @PutMapping("update")
     public ResponseEntity<Department> update(@RequestBody Department department) {
 
-        //проверка на обязательные параметры
         if (department.getDepartmentId() == null && department.getDepartmentId() == 0) {
             LOGGER.error("Missed param: id");
             return new ResponseEntity("Missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение departmentName
         if (department.getDepartmentName() == null || department.getDepartmentName().trim().length() == 0) {
             LOGGER.error("Missed param: departmentName");
             return new ResponseEntity("Missed param: departmentName", HttpStatus.NOT_ACCEPTABLE);
@@ -83,7 +80,7 @@ public class DepartmentController {
 
         try {
             department = departmentService.findById(id);
-        }catch (NoSuchElementException e){ //если объект не будет найден
+        }catch (NoSuchElementException e){
             e.printStackTrace();
             LOGGER.error("Id = " + id + " not found");
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);

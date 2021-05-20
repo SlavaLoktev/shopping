@@ -31,11 +31,9 @@ public class AttrValueController {
     public ResponseEntity<AttrValue> add(@RequestBody AttrValue attrValue){
 
         if(attrValue.getAttrValueId() != null && attrValue.getAttrValueId() != 0){
-            //id создается автоматически в БД, поэтому его не нужно передавать
             return new ResponseEntity("redundant param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение attrValue
         if(attrValue.getAttrValue() == null || attrValue.getAttrValue().trim().length() == 0){
             return new ResponseEntity("missed param: attrValue", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -46,12 +44,10 @@ public class AttrValueController {
     @PutMapping("update")
     public ResponseEntity<AttrValue> update(@RequestBody AttrValue attrValue) {
 
-        //проверка на обязательные параметры
         if (attrValue.getAttrValueId() == null && attrValue.getAttrValueId() == 0) {
             return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение attrValue
         if (attrValue.getAttrValue() == null || attrValue.getAttrValue().trim().length() == 0) {
             return new ResponseEntity("missed param: attrValue", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -66,7 +62,7 @@ public class AttrValueController {
 
         try {
             attrValue = attrValueService.findById(id);
-        }catch (NoSuchElementException e){ //если объект не будет найден
+        }catch (NoSuchElementException e){
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
         }

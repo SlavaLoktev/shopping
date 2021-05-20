@@ -11,9 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductSearchValuesWithoutPaging {
 
-    //поля поиска(все типы - объектные, не примитивные. чтобы можно было передать null)
     private String productName;
-    private Integer price;//мб не нужно
+    private Integer price;
 
     public String getProductName() {
         return productName;

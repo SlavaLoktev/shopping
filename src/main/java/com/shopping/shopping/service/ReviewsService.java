@@ -22,11 +22,11 @@ public class ReviewsService {
     }
 
     public Reviews add(Reviews reviews){
-        return repository.save(reviews);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(reviews);
     }
 
     public Reviews update(Reviews reviews){
-        return repository.save(reviews);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(reviews);
     }
 
     public void deleteById(Long id){
@@ -34,7 +34,7 @@ public class ReviewsService {
     }
 
     public Reviews findById(Long id){
-        return repository.findById(id).get();// т.к. возвращается optional - нужно  получить объект методом get()
+        return repository.findById(id).get();
     }
 
     public List<Reviews> findByParams(Long product){

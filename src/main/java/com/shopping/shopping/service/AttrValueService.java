@@ -22,18 +22,18 @@ public class AttrValueService {
     }
 
     public AttrValue add(AttrValue attrValue){
-        return repository.save(attrValue);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(attrValue);
     }
 
     public AttrValue update(AttrValue attrValue){
-        return repository.save(attrValue);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(attrValue);
     }
 
     public void deleteById(Long id){
         repository.deleteById(id);
     }
 
-    public AttrValue findById(Long id){
-        return repository.findById(id).get();// т.к. возвращается optional - нужно  получить объект методом get()
+    public AttrValue findById(Long id) {
+        return repository.findById(id).get();
     }
 }

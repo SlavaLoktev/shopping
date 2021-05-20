@@ -24,7 +24,6 @@ public class Department implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "department_id")
-    //@JsonIgnore
     private Long departmentId;
 
     @Column(name = "department_name")

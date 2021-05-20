@@ -31,11 +31,9 @@ public class AttributeController {
     public ResponseEntity<Attribute> add(@RequestBody Attribute attribute){
 
         if(attribute.getAttributeId() != null && attribute.getAttributeId() != 0){
-            //id создается автоматически в БД, поэтому его не нужно передавать
             return new ResponseEntity("redundant param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение attribute_name
         if(attribute.getAttributeName() == null || attribute.getAttributeName().trim().length() == 0){
             return new ResponseEntity("missed param: attributeName", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -46,12 +44,10 @@ public class AttributeController {
     @PutMapping("update")
     public ResponseEntity<Attribute> update(@RequestBody Attribute attribute) {
 
-        //проверка на обязательные параметры
         if (attribute.getAttributeId() == null && attribute.getAttributeId() == 0) {
             return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение attributeName
         if (attribute.getAttributeName() == null || attribute.getAttributeName().trim().length() == 0) {
             return new ResponseEntity("missed param: attributeName", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -66,7 +62,7 @@ public class AttributeController {
 
         try {
             attribute = attributeService.findById(id);
-        }catch (NoSuchElementException e){ //если объект не будет найден
+        }catch (NoSuchElementException e){
             e.printStackTrace();
             return new ResponseEntity("id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
         }

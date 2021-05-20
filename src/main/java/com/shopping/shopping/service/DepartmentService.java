@@ -22,11 +22,11 @@ public class DepartmentService {
     }
 
     public Department add(Department department){
-        return repository.save(department);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(department);
     }
 
     public Department update(Department department){
-        return repository.save(department);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(department);
     }
 
     public void deleteById(Long id){
@@ -34,6 +34,6 @@ public class DepartmentService {
     }
 
     public Department findById(Long id){
-        return repository.findById(id).get();// т.к. возвращается optional - нужно  получить объект методом get()
+        return repository.findById(id).get();
     }
 }

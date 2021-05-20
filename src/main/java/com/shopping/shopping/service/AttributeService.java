@@ -22,11 +22,11 @@ public class AttributeService {
     }
 
     public Attribute add(Attribute attribute){
-        return repository.save(attribute);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(attribute);
     }
 
     public Attribute update(Attribute attribute){
-        return repository.save(attribute);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(attribute);
     }
 
     public void deleteById(Long id){
@@ -34,6 +34,6 @@ public class AttributeService {
     }
 
     public Attribute findById(Long id){
-        return repository.findById(id).get();// т.к. возвращается optional - нужно  получить объект методом get()
+        return repository.findById(id).get();
     }
 }

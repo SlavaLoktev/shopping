@@ -41,7 +41,6 @@ public class OrdersController {
     public ResponseEntity<Orders> add(@RequestBody Orders orders){
 
         if(orders.getOrderId() != null && orders.getOrderId() != 0){
-            //id создается автоматически в БД, поэтому его не нужно передавать
             LOGGER.error("Redundand param: id must be null");
             return new ResponseEntity("Redundand param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -86,6 +85,10 @@ public class OrdersController {
             return new ResponseEntity("Date can not be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
+        if(orders.getOrderTotal() == null || orders.getOrderTotal() == 0){
+            LOGGER.error("Missed param: orderTotal");
+        }
+
         orders.getQuantity().intValue();
 
         LOGGER.info("Added order: " + orders);
@@ -97,7 +100,6 @@ public class OrdersController {
     public ResponseEntity<Orders> update(@RequestBody Orders orders){
 
         if(orders.getOrderId() == null && orders.getOrderId() == 0){
-            //id создается автоматически в БД, поэтому его не нужно передавать
             LOGGER.error("Missed param: id");
             return new ResponseEntity("Missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -142,6 +144,10 @@ public class OrdersController {
             return new ResponseEntity("Date can not be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
+        if(orders.getOrderTotal() == null || orders.getOrderTotal() == 0){
+            LOGGER.error("Missed param: orderTotal");
+        }
+
         orders.getQuantity().intValue();
 
         LOGGER.info("Updated order: " + orders);
@@ -156,7 +162,7 @@ public class OrdersController {
 
         try {
             orders = ordersService.findById(id);
-        }catch (NoSuchElementException e){ //если объект не будет найден
+        }catch (NoSuchElementException e){
             e.printStackTrace();
             LOGGER.error("Id = " + id + " not found");
             return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);

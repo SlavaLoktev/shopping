@@ -13,18 +13,10 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findAllByOrderByPriceAsc(); //сортировка по цене по возрастанию
+    List<Product> findAllByOrderByPriceAsc();
 
-    List<Product> findAllByOrderByPriceDesc(); //сортировка по цене по убыванию
+    List<Product> findAllByOrderByPriceDesc();
 
-    /*//если productName == null или =='', то получим все значения
-    @Query("select p from Product p where " +
-            "(:productName is null or :productName='' or lower(p.productName) like lower(concat('%', :productName, '%') ) ) " +
-            "order by p.productName asc")
-    // поиск по всем переданным параметрам (пустые параметры учитываться не будут)
-    Page<Product> findByParams(@Param("productName") String productName, Pageable pageable);*/
-
-    // поиск по всем переданным параметрам (пустые параметры учитываться не будут)
     @Query("select p from Product p where " +
             "(:productName is null or :productName='' or lower(p.productName) like lower(concat('%', :productName, '%') ) ) and" +
             "(:price is null or p.price=:price)" +

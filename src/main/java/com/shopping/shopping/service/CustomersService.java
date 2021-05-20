@@ -9,8 +9,6 @@ import java.util.List;
 
 @Service
 @Transactional
-// все методы класса должны выполниться без ошибки, чтобы транзакция завершилась
-// если в методе возникнет исключение - все выполненные операции откатятся (Rollback)
 public class CustomersService {
 
     private final CustomersRepository repository;
@@ -36,6 +34,6 @@ public class CustomersService {
     }
 
     public Customers findById(Long id){
-        return repository.findById(id).get();// т.к. возвращается optional - нужно  получить объект методом get()
+        return repository.findById(id).get();
     }
 }

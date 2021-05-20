@@ -9,18 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-//возможные значения, по которым можно искать продукт
 public class ProductSearchValues {
 
-    //поля поиска(все типы - объектные, не примитивные. чтобы можно было передать null)
     private String productName;
-    private Integer price;//мб не нужно
+    private Integer price;
 
-    //постраничность
     private Integer pageNumber;
     private Integer pageSize;
 
-    //сортировка
     private String sortColumn;
     private String sortDirection;
 

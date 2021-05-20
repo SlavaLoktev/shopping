@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-//возможные значения, по которым можно искать отзывы
 public class ReviewsSearchValues {
 
     private Long product;

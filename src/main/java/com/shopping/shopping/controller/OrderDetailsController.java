@@ -41,7 +41,6 @@ public class OrderDetailsController {
     public ResponseEntity<OrderDetails> add(@RequestBody OrderDetails orderDetails){
 
         if(orderDetails.getOrderDetailId() != null && orderDetails.getOrderDetailId()  != 0){
-            //id создается автоматически в БД, поэтому его не нужно передавать
             LOGGER.error("Redundand param: id must be null");
             return new ResponseEntity("Redundand param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -67,7 +66,6 @@ public class OrderDetailsController {
     public ResponseEntity<OrderDetails> update(@RequestBody OrderDetails orderDetails){
 
         if(orderDetails.getOrderDetailId() == null && orderDetails.getOrderDetailId()  == 0){
-            //id создается автоматически в БД, поэтому его не нужно передавать
             LOGGER.error("Missed param: id");
             return new ResponseEntity("Missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }

@@ -34,12 +34,11 @@ public class Reviews {
     @Column(name = "rating")
     private Integer rating;
 
-    //@JsonManagedReference
+
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private Product product;
 
-    //@JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customers customers;

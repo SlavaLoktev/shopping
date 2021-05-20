@@ -71,8 +71,4 @@ public class Customers {
                 ", custLastName='" + custLastName + '\'' +
                 '}';
     }
-
-    //    @JsonBackReference
-//    @OneToMany(mappedBy = "customers", fetch = FetchType.LAZY)
-//    List<Reviews> reviewsByCustomers;
 }

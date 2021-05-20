@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-// используем @RestController, чтобы все отвыеты сразу оборачивались в JSON
 @RestController
 @RequestMapping("/product")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -24,10 +23,8 @@ public class ProductController {
 
     private final ProductService productService;
 
-    //private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
     private static Logger LOGGER = Logger.getLogger(ProductController.class);
 
-    //автоматическое внедрение экземпляра класса через конструктор
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -75,27 +72,22 @@ public class ProductController {
     @PostMapping("/add")
     public ResponseEntity<Product> add(@RequestBody Product product){
 
-        //проверка на обязательные параметры
         if(product.getProductId() != null && product.getProductId() != 0){
-            //id создается автоматически в БД, поэтому его не нужно передавать
             LOGGER.error("Redundand param: id must be null");
             return new ResponseEntity("Redundand param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение product_name
         if(product.getProductName() == null || product.getProductName().trim().length() == 0){
             LOGGER.error("Missed param: productName");
             return new ResponseEntity("Missed param: productName", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение price
         if(product.getPrice() == null || product.getPrice() == 0){
             LOGGER.error("Missed param: price");
             return new ResponseEntity("Missed param: price", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение storage_unit
-        if(product.getStorageUnit() == null || product.getProductName().trim().length() == 0){
+        if(product.getStorageUnit() == null || product.getStorageUnit().trim().length() == 0){
             LOGGER.error("Missed param: storageUnit");
             return new ResponseEntity("Missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -123,20 +115,17 @@ public class ProductController {
             return new ResponseEntity("Missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение product_name
         if(product.getProductName() == null || product.getProductName().trim().length() == 0){
             LOGGER.error("Missed param: productName");
             return new ResponseEntity("Missed param: productName", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение price
         if(product.getPrice() == null || product.getPrice() == 0){
             LOGGER.error("Missed param: price");
             return new ResponseEntity("Missed param: price", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        //если передали пустое значение storage_unit
-        if(product.getStorageUnit() == null || product.getProductName().trim().length() == 0){
+        if(product.getStorageUnit() == null || product.getStorageUnit().trim().length() == 0){
             LOGGER.error("Missed param: storageUnit");
             return new ResponseEntity("Missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -163,7 +152,7 @@ public class ProductController {
 
         try {
             product = productService.findById(id);
-        }catch (NoSuchElementException e){ //если объект не будет найден
+        }catch (NoSuchElementException e){
             e.printStackTrace();
             LOGGER.error("Id = " + id + " not found");
             return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
@@ -190,13 +179,9 @@ public class ProductController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    //поиск по любым параметрам ProductSearchValues
-    //обязательно нужно передавать хотя бы 1 параметр
-    //сортировка по цене не работает(использовать методы выше)
     @PostMapping("/search")
     public ResponseEntity<Page<Product>> search(@RequestBody ProductSearchValues productSearchValues){
 
-        //исключить NullPointerException
         String productName = productSearchValues.getProductName() != null ? productSearchValues.getProductName() : null;
 
         Integer price = productSearchValues.getPrice() != null ? productSearchValues.getPrice() : null;
@@ -207,28 +192,21 @@ public class ProductController {
         Integer pageNumber = productSearchValues.getPageNumber() != null ? productSearchValues.getPageNumber() : null;
         Integer pageSize = productSearchValues.getPageSize() != null ? productSearchValues.getPageSize() : null;
 
-        //если null или пустой - используем asc, иначе desc
         Sort.Direction direction = sortDirection == null || sortDirection.trim().length() == 0 || sortDirection.trim().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
 
-        //подставляем все значения-------------
-
-        //объект сортировки
         Sort sort = Sort.by(direction, sortColumn);
 
-        //объект постраничности
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
 
-        //результат запроса с постраничным выводом
         Page result = productService.findByParams(productName, price, pageRequest);
 
         if (result.getSize() == 1){
-            LOGGER.info(result.getSize() + " item found");
+            LOGGER.info(result.getSize() + " product found");
         }
         if (result.getSize() > 1){
-            LOGGER.info(result.getSize() + " items found");
+            LOGGER.info(result.getSize() + " products found");
         }
 
-        //результат запроса
         return ResponseEntity.ok(result);
     }
 

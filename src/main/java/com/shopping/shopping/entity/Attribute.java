@@ -27,11 +27,6 @@ public class Attribute {
     @Column(name = "attribute_name")
     private String attributeName;
 
-    //@JsonBackReference
-//    @OneToMany(mappedBy = "attribute", fetch = FetchType.LAZY)
-//    List<AttrValue> attrValues;
-
-
     public Long getAttributeId() {
         return attributeId;
     }

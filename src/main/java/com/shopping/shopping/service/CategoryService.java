@@ -22,11 +22,11 @@ public class CategoryService {
     }
 
     public Category add(Category category){
-        return repository.save(category);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(category);
     }
 
     public Category update(Category category){
-        return repository.save(category);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(category);
     }
 
     public void deleteById(Long id){
@@ -34,7 +34,7 @@ public class CategoryService {
     }
 
     public Category findById(Long id){
-        return repository.findById(id).get();// т.к. возвращается optional - нужно  получить объект методом get()
+        return repository.findById(id).get();
     }
 
     public List<Category> findByParams(Long departmentId){

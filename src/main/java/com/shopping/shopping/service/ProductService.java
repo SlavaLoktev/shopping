@@ -11,8 +11,6 @@ import java.util.List;
 
 @Service
 @Transactional
-// все методы класса должны выполниться без ошибки, чтобы транзакция завершилась
-// если в методе возникнет исключение - все выполненные операции откатятся (Rollback)
 public class ProductService {
 
     private final ProductRepository repository;
@@ -26,11 +24,11 @@ public class ProductService {
     }
 
     public Product add(Product product){
-        return repository.save(product);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(product);
     }
 
     public Product update(Product product){
-        return repository.save(product);//метод save обновляет или создает новый объект, если его не было
+        return repository.save(product);
     }
 
     public void deleteById(Long id){
@@ -42,7 +40,7 @@ public class ProductService {
     }
 
     public Product findById(Long id){
-        return repository.findById(id).get();// т.к. возвращается optional - нужно  получить объект методом get()
+        return repository.findById(id).get();
     }
 
     public List<Product> findAllByOrderByPriceAsc(){

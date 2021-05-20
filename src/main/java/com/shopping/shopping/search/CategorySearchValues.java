@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-//возможные значения, по которым можно искать категории
 public class CategorySearchValues {
 
     private Long departmentId;

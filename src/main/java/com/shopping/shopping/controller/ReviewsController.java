@@ -42,7 +42,6 @@ public class ReviewsController {
     public ResponseEntity<Reviews> add(@RequestBody Reviews reviews){
 
         if(reviews.getReviewId() != null && reviews.getReviewId() != 0){
-            //id создается автоматически в БД, поэтому его не нужно передавать
             LOGGER.error("Redundand param: id must be null");
             return new ResponseEntity("Redundant param: id must be null", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -66,7 +65,6 @@ public class ReviewsController {
     public ResponseEntity<Reviews> update(@RequestBody Reviews reviews){
 
         if(reviews.getReviewId() == null && reviews.getReviewId() == 0){
-            //id создается автоматически в БД, поэтому его не нужно передавать
             LOGGER.error("Missed param: id");
             return new ResponseEntity("Missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -93,7 +91,7 @@ public class ReviewsController {
 
         try {
             reviews = reviewsService.findById(id);
-        }catch (NoSuchElementException e){ //если объект не будет найден
+        }catch (NoSuchElementException e){
             e.printStackTrace();
             LOGGER.error("Id = " + id + " not found");
             return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
