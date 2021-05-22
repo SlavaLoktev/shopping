@@ -10,112 +10,62 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/reviews")
 @CrossOrigin(origins = "http://localhost:4200")
-public class ReviewsController {
+public class ReviewsController extends AbstractController<Reviews, ReviewsService>{
+
+    private static final Logger LOGGER = Logger.getLogger(ReviewsController.class);
 
     private final ReviewsService reviewsService;
 
-    private static Logger LOGGER = Logger.getLogger(ProductController.class);
-
     public ReviewsController(ReviewsService reviewsService) {
+        super(reviewsService);
         this.reviewsService = reviewsService;
     }
 
-    @GetMapping("/all")
-    public List<Reviews> findAll(){
-
-        if (reviewsService.findAll().size() == 1){
-            LOGGER.info(reviewsService.findAll().size() + " review found");
-        }
-        if (reviewsService.findAll().size() > 1){
-            LOGGER.info(reviewsService.findAll().size() + " reviews found");
-        }
-
-        return reviewsService.findAll();
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<Reviews> add(@RequestBody Reviews reviews){
-
-        if(reviews.getReviewId() != null && reviews.getReviewId() != 0){
-            LOGGER.error("Redundand param: id must be null");
-            return new ResponseEntity("Redundant param: id must be null", HttpStatus.NOT_ACCEPTABLE);
-        }
+    public boolean checkAdditionalParams(Reviews reviews){
 
         if(reviews.getRating() == null || reviews.getRating() == 0){
             LOGGER.error("Missed param: rating");
-            return new ResponseEntity("Missed param: rating", HttpStatus.NOT_ACCEPTABLE);
+            return false;
         }
 
         if(reviews.getReviewDate() == null){
             LOGGER.error("Missed param: reviewDate");
-            return new ResponseEntity("Missed param: reviewDate", HttpStatus.NOT_ACCEPTABLE);
+            return false;
         }
 
-        LOGGER.info("Added review: " + reviews);
-
-        return ResponseEntity.ok(reviewsService.add(reviews));
+        return true;
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Reviews> update(@RequestBody Reviews reviews){
+    @Override
+    public boolean checkParams(@RequestBody Reviews reviews, String operationType){
 
-        if(reviews.getReviewId() == null && reviews.getReviewId() == 0){
-            LOGGER.error("Missed param: id");
-            return new ResponseEntity("Missed param: id", HttpStatus.NOT_ACCEPTABLE);
+        switch (operationType){
+            case "add":
+                if(reviews.getReviewId() != null){
+                    LOGGER.error("Redundand param: id must be null");
+                    return false;
+                }
+                if(!checkAdditionalParams(reviews)){
+                    return false;
+                }
+                break;
+            case "update":
+                if(reviews.getReviewId() == null || reviews.getReviewId() == 0){
+                    LOGGER.error("Missed param: id");
+                    return false;
+                }
+                if(!checkAdditionalParams(reviews)){
+                    return false;
+                }
+                break;
+            default:
+                return true;
         }
-
-        if(reviews.getRating() == null || reviews.getRating() == 0){
-            LOGGER.error("Missed param: rating");
-            return new ResponseEntity("Missed param: rating", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(reviews.getReviewDate() == null){
-            LOGGER.error("Missed param: reviewDate");
-            return new ResponseEntity("Missed param: reviewDate", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        LOGGER.info("Updated review: " + reviews);
-
-        return ResponseEntity.ok(reviewsService.update(reviews));
-    }
-
-    @GetMapping("/id/{id}")
-    public ResponseEntity<Reviews> findById(@PathVariable Long id){
-
-        Reviews reviews = null;
-
-        try {
-            reviews = reviewsService.findById(id);
-        }catch (NoSuchElementException e){
-            e.printStackTrace();
-            LOGGER.error("Id = " + id + " not found");
-            return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        LOGGER.info("Review " + reviews + " found");
-
-        return ResponseEntity.ok(reviews);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable Long id){
-
-        try {
-            reviewsService.deleteById(id);
-        }catch (EmptyResultDataAccessException e){
-            e.printStackTrace();
-            LOGGER.error("Id = " + id + " not found");
-            return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        LOGGER.info("Deleted review with id: " + id);
-
-        return new ResponseEntity(HttpStatus.OK);
+        return true;
     }
 
     @PostMapping("/search")
@@ -123,15 +73,15 @@ public class ReviewsController {
 
         Long product = reviewsSearchValues.getProduct() != null ? reviewsSearchValues.getProduct() : null;
 
-        List<Reviews> result = reviewsService.findByParams(product);
+        List<Reviews> result = null;
 
-        if (result.size() == 1){
-            LOGGER.info(result.size() + " review found");
+        try {
+            result = reviewsService.findByParams(product);
+        }catch (EmptyResultDataAccessException e){
+            LOGGER.error(String.format("%s, review(s) can not found", HttpStatus.NOT_FOUND));
         }
 
-        if (result.size() > 1){
-            LOGGER.info(result.size() + " reviews found");
-        }
+        LOGGER.error(String.format("%d review(s) found", result.size()));
 
         return ResponseEntity.ok(result);
     }

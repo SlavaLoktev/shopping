@@ -9,35 +9,16 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ReviewsService {
+public class ReviewsService extends AbstractService<Reviews, ReviewsRepository>{
 
     private final ReviewsRepository repository;
 
     public ReviewsService(ReviewsRepository repository) {
+        super(repository);
         this.repository = repository;
     }
 
-    public List<Reviews> findAll(){
-        return repository.findAll();
-    }
-
-    public Reviews add(Reviews reviews){
-        return repository.save(reviews);
-    }
-
-    public Reviews update(Reviews reviews){
-        return repository.save(reviews);
-    }
-
-    public void deleteById(Long id){
-        repository.deleteById(id);
-    }
-
-    public Reviews findById(Long id){
-        return repository.findById(id).get();
-    }
-
-    public List<Reviews> findByParams(Long product){
-        return repository.findByParams(product);
+    public List<Reviews> findByParams(Long productId){
+        return repository.findByParams(productId);
     }
 }

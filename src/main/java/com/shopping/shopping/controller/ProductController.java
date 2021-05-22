@@ -14,169 +14,107 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/product")
 @CrossOrigin(origins = "http://localhost:4200")
-public class ProductController {
+public class ProductController extends AbstractController<Product, ProductService>{
+
+    private static final Logger LOGGER = Logger.getLogger(ProductController.class);
 
     private final ProductService productService;
 
-    private static Logger LOGGER = Logger.getLogger(ProductController.class);
-
     public ProductController(ProductService productService) {
+        super(productService);
         this.productService = productService;
     }
 
-    //для тестирования адрес: http://localhost:8080/product/all
-    @GetMapping("/all")
-    public List<Product> findAll(){
+    public boolean checkAdditionalParams(Product product){
 
-        if (productService.findAll().size() == 1){
-            LOGGER.info(productService.findAll().size() + " product found");
-        }
-        if (productService.findAll().size() > 1){
-            LOGGER.info(productService.findAll().size() + " products found");
+        if(product.getProductName() == null || product.getProductName().trim().length() == 0){
+            LOGGER.error("Missed param: productName");
+            return false;
         }
 
-        return productService.findAll();
+        if(product.getPrice() == null || product.getPrice() == 0){
+            LOGGER.error("Missed param: price");
+            return false;
+        }
+
+        if(product.getStorageUnit() == null || product.getStorageUnit().trim().length() == 0){
+            LOGGER.error("Missed param: storageUnit");
+            return false;
+        }
+
+        if(product.getPrice() < 0){
+            LOGGER.error("Price couldn't be < 0");
+            return false;
+        }
+
+        if(product.getDiscountPrice() < 0){
+            LOGGER.error("Price couldn't be < 0");
+            return false;
+        }
+
+        return true;
     }
 
+    @Override
+    public boolean checkParams(@RequestBody Product product, String operationType){
+
+        switch (operationType){
+            case "add":
+                if(product.getProductId() != null){
+                    LOGGER.error("Redundand param: id must be null");
+                    return false;
+                }
+                if(!checkAdditionalParams(product)){
+                    return false;
+                }
+                break;
+            case "update":
+                if(product.getProductId() == null || product.getProductId() == 0){
+                    LOGGER.error("Missed param: id");
+                    return false;
+                }
+                if(!checkAdditionalParams(product)){
+                    return false;
+                }
+                break;
+            default:
+                return true;
+        }
+        return true;
+    }
+
+    //для тестирования адрес: http://localhost:8080/product/all
+
     @GetMapping("/allByOrderByPriceAsc")
-    public List<Product> findAllByOrderByPriceAsc(){
+    public ResponseEntity<List<Product>> findAllByOrderByPriceAsc(){
 
-        if (productService.findAllByOrderByPriceAsc().size() == 1){
-            LOGGER.info(productService.findAll().size() + " product found");
-        }
-        if (productService.findAllByOrderByPriceAsc().size() > 1){
-            LOGGER.info(productService.findAll().size() + " products found");
+        List<Product> result = null;
+
+        try {
+            result = productService.findAllByOrderByPriceAsc();
+        }catch (EmptyResultDataAccessException e){
+            LOGGER.error(String.format("%s, product(s) can not found", HttpStatus.NOT_FOUND));
         }
 
-        return productService.findAllByOrderByPriceAsc();
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/allByOrderByPriceDesc")
-    public List<Product> findAllByOrderByPriceDesc(){
+    public ResponseEntity<List<Product>> findAllByOrderByPriceDesc(){
 
-        if (productService.findAllByOrderByPriceDesc().size() == 1){
-            LOGGER.info(productService.findAll().size() + " product found");
-        }
-        if (productService.findAllByOrderByPriceDesc().size() > 1){
-            LOGGER.info(productService.findAll().size() + " products found");
-        }
-
-        return productService.findAllByOrderByPriceDesc();
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<Product> add(@RequestBody Product product){
-
-        if(product.getProductId() != null && product.getProductId() != 0){
-            LOGGER.error("Redundand param: id must be null");
-            return new ResponseEntity("Redundand param: id must be null", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(product.getProductName() == null || product.getProductName().trim().length() == 0){
-            LOGGER.error("Missed param: productName");
-            return new ResponseEntity("Missed param: productName", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(product.getPrice() == null || product.getPrice() == 0){
-            LOGGER.error("Missed param: price");
-            return new ResponseEntity("Missed param: price", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(product.getStorageUnit() == null || product.getStorageUnit().trim().length() == 0){
-            LOGGER.error("Missed param: storageUnit");
-            return new ResponseEntity("Missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(product.getPrice() < 0){
-            LOGGER.error("Price couldn't be < 0");
-            return new ResponseEntity("Price can not be < 0", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(product.getDiscountPrice() < 0){
-            LOGGER.error("Price couldn't be < 0");
-            return new ResponseEntity("Price can not be < 0", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        LOGGER.info("Added product: " + product);
-
-        return ResponseEntity.ok(productService.add(product));
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<Product> update(@RequestBody Product product){
-
-        if(product.getProductId() == null && product.getProductId() == 0){
-            LOGGER.error("Missed param: id");
-            return new ResponseEntity("Missed param: id", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(product.getProductName() == null || product.getProductName().trim().length() == 0){
-            LOGGER.error("Missed param: productName");
-            return new ResponseEntity("Missed param: productName", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(product.getPrice() == null || product.getPrice() == 0){
-            LOGGER.error("Missed param: price");
-            return new ResponseEntity("Missed param: price", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(product.getStorageUnit() == null || product.getStorageUnit().trim().length() == 0){
-            LOGGER.error("Missed param: storageUnit");
-            return new ResponseEntity("Missed param: storageUnit", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(product.getPrice() < 0){
-            LOGGER.error("Price couldn't be < 0");
-            return new ResponseEntity("Price can not < 0", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(product.getDiscountPrice() < 0){
-            LOGGER.error("Price couldn't be < 0");
-            return new ResponseEntity("Price can not be < 0", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        LOGGER.info("Updated product: " + product);
-
-        return ResponseEntity.ok(productService.update(product));
-    }
-
-    @GetMapping("/id/{id}")
-    public ResponseEntity<Product> findById(@PathVariable Long id){
-
-        Product product = null;
+        List<Product> result = null;
 
         try {
-            product = productService.findById(id);
-        }catch (NoSuchElementException e){
-            e.printStackTrace();
-            LOGGER.error("Id = " + id + " not found");
-            return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        LOGGER.info("Product " + product + " found");
-
-        return ResponseEntity.ok(product);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable Long id){
-
-        try {
-            productService.deleteById(id);
+            result = productService.findAllByOrderByPriceDesc();
         }catch (EmptyResultDataAccessException e){
-            e.printStackTrace();
-            LOGGER.error("Id = " + id + " not found");
-            return new ResponseEntity("Id = " + id + " not found", HttpStatus.NOT_ACCEPTABLE);
+            LOGGER.error(String.format("%s, product(s) can not found", HttpStatus.NOT_FOUND));
         }
 
-        LOGGER.info("Deleted product with id: " + id);
-
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/search")
@@ -198,14 +136,15 @@ public class ProductController {
 
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
 
-        Page result = productService.findByParams(productName, price, pageRequest);
+        Page result = null;
 
-        if (result.getSize() == 1){
-            LOGGER.info(result.getSize() + " product found");
+        try {
+            result = productService.findByParams(productName, price, pageRequest);
+        }catch (EmptyResultDataAccessException e){
+            LOGGER.error(String.format("%s, product(s) can not found", HttpStatus.NOT_FOUND));
         }
-        if (result.getSize() > 1){
-            LOGGER.info(result.getSize() + " products found");
-        }
+
+        LOGGER.error(String.format("%d product(s) found", result.getSize()));
 
         return ResponseEntity.ok(result);
     }
@@ -217,15 +156,15 @@ public class ProductController {
 
         Integer price = productSearchValuesWithoutPaging.getPrice() != null ? productSearchValuesWithoutPaging.getPrice() : null;
 
-        List<Product> result = productService.findByParamsWithoutPaging(productName, price);
+        List<Product> result = null;
 
-        if (result.size() == 1){
-            LOGGER.info(result.size() + " product found");
+        try {
+            result = productService.findByParamsWithoutPaging(productName, price);
+        }catch (EmptyResultDataAccessException e){
+            LOGGER.error(String.format("%s, product(s) can not found", HttpStatus.NOT_FOUND));
         }
 
-        if (result.size() > 1){
-            LOGGER.info(result.size() + " products found");
-        }
+        LOGGER.error(String.format("%d product(s) found", result.size()));
 
         return ResponseEntity.ok(result);
     }

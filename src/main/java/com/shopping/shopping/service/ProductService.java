@@ -11,36 +11,17 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ProductService {
+public class ProductService extends AbstractService<Product, ProductRepository>{
 
     private final ProductRepository repository;
 
     public ProductService(ProductRepository repository) {
+        super(repository);
         this.repository = repository;
-    }
-
-    public List<Product> findAll(){
-        return repository.findAll();
-    }
-
-    public Product add(Product product){
-        return repository.save(product);
-    }
-
-    public Product update(Product product){
-        return repository.save(product);
-    }
-
-    public void deleteById(Long id){
-        repository.deleteById(id);
     }
 
     public Page findByParams(String productName, Integer price, PageRequest paging){
         return repository.findByParams(productName, price, paging);
-    }
-
-    public Product findById(Long id){
-        return repository.findById(id).get();
     }
 
     public List<Product> findAllByOrderByPriceAsc(){
