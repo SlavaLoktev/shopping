@@ -34,13 +34,16 @@ public class OrderDetailsController extends AbstractController<OrderDetails, Ord
             return false;
         }
 
+        if (orderDetails.getQuantity() != (int)orderDetails.getQuantity()){
+            LOGGER.error("Quantity must be integer");
+            return false;
+        }
+
         return true;
     }
 
     @Override
     public boolean checkParams(@RequestBody OrderDetails orderDetails, String operationType){
-
-        orderDetails.getQuantity().intValue();
 
         switch (operationType){
             case "add":
