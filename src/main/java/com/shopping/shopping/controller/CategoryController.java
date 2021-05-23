@@ -5,6 +5,8 @@ import com.shopping.shopping.entity.Category;
 import com.shopping.shopping.search.CategorySearchValues;
 import com.shopping.shopping.service.CategoryService;
 import org.apache.log4j.Logger;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,15 +69,15 @@ public class CategoryController extends AbstractController<Category, CategorySer
 
         Long departmentId = categorySearchValues.getDepartmentId() != null ? categorySearchValues.getDepartmentId() : null;
 
-        List<Category> result = categoryService.findByParams(departmentId);
+        List<Category> result = null;
 
-        if (result.size() == 1){
-            LOGGER.info(result.size() + " category found");
+        try {
+            result = categoryService.findByParams(departmentId);
+        }catch (EmptyResultDataAccessException e){
+            LOGGER.error(String.format("%s, category(ies) can not found", HttpStatus.NOT_FOUND));
         }
 
-        if (result.size() > 1){
-            LOGGER.info(result.size() + " categories found");
-        }
+        LOGGER.info(String.format("%d category(ies) found", result.size()));
 
         return ResponseEntity.ok(result);
     }

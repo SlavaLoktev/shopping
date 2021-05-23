@@ -87,8 +87,6 @@ public class ProductController extends AbstractController<Product, ProductServic
         return true;
     }
 
-    //для тестирования адрес: http://localhost:8080/product/all
-
     @GetMapping("/allByOrderByPriceAsc")
     public ResponseEntity<List<Product>> findAllByOrderByPriceAsc(){
 
@@ -144,7 +142,7 @@ public class ProductController extends AbstractController<Product, ProductServic
             LOGGER.error(String.format("%s, product(s) can not found", HttpStatus.NOT_FOUND));
         }
 
-        LOGGER.error(String.format("%d product(s) found", result.getSize()));
+        LOGGER.info(String.format("%d product(s) found", result.getSize()));
 
         return ResponseEntity.ok(result);
     }
@@ -164,7 +162,7 @@ public class ProductController extends AbstractController<Product, ProductServic
             LOGGER.error(String.format("%s, product(s) can not found", HttpStatus.NOT_FOUND));
         }
 
-        LOGGER.error(String.format("%d product(s) found", result.size()));
+        LOGGER.info(String.format("%d product(s) found", result.size()));
 
         return ResponseEntity.ok(result);
     }

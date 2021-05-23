@@ -81,7 +81,7 @@ public class ReviewsController extends AbstractController<Reviews, ReviewsServic
             LOGGER.error(String.format("%s, review(s) can not found", HttpStatus.NOT_FOUND));
         }
 
-        LOGGER.error(String.format("%d review(s) found", result.size()));
+        LOGGER.info(String.format("%d review(s) found", result.size()));
 
         return ResponseEntity.ok(result);
     }
