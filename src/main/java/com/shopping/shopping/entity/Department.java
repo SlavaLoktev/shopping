@@ -29,6 +29,9 @@ public class Department implements Serializable {
     @Column(name = "department_name")
     private String departmentName;
 
+    @Column(name = "route")
+    private String route;
+
     public Long getDepartmentId() {
         return departmentId;
     }

@@ -154,10 +154,14 @@ public class ProductController extends AbstractController<Product, ProductServic
 
         Integer price = productSearchValuesWithoutPaging.getPrice() != null ? productSearchValuesWithoutPaging.getPrice() : null;
 
+        Long categoryId = productSearchValuesWithoutPaging.getCategoryId() != null ? productSearchValuesWithoutPaging.getCategoryId() : null;
+
+        Long departmentId = productSearchValuesWithoutPaging.getDepartmentId() != null ? productSearchValuesWithoutPaging.getDepartmentId() : null;
+
         List<Product> result = null;
 
         try {
-            result = productService.findByParamsWithoutPaging(productName, price);
+            result = productService.findByParamsWithoutPaging(productName, price, categoryId, departmentId);
         }catch (EmptyResultDataAccessException e){
             LOGGER.error(String.format("%s, product(s) can not found", HttpStatus.NOT_FOUND));
         }

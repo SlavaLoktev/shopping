@@ -32,7 +32,7 @@ public class ProductService extends AbstractService<Product, ProductRepository>{
         return repository.findAllByOrderByPriceDesc();
     }
 
-    public List<Product> findByParamsWithoutPaging(String productName, Integer price){
-        return repository.findByParamsWithoutPaging(productName, price);
+    public List<Product> findByParamsWithoutPaging(String productName, Integer price, Long categoryId, Long departmentId){
+        return repository.findByParamsWithoutPaging(productName, price, categoryId, departmentId);
     }
 }
